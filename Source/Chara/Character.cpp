@@ -133,7 +133,6 @@ bool Character::ApplyDamage(float damage,float invincibleTime) {
 
 
 	if(damage < health){
-
 		health -= damage;
 	}
 	else {
@@ -253,7 +252,7 @@ void Character::UpdateVerticalMove(float elapsedTime) {
 	DirectX::XMFLOAT3 normal = { 0, 1, 0 };
 
 	// —Ž‰º’†‚Ü‚½‚ÍÚ’n‚µ‚Ä‚¢‚éê‡
-	if (my < 0.0f) {
+	if (my <= 0.0f) {
 		DirectX::XMFLOAT3 start = { position.x, position.y + stepOffset, position.z };
 		DirectX::XMFLOAT3 end = { position.x + velocity.x * elapsedTime,
 								  position.y + my,

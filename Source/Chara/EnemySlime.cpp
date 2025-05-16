@@ -23,6 +23,8 @@ EnemySlime::EnemySlime() {
 	DamageMin = 10;
 	targetPosition = position;
 
+	despawnTimer = 60.0f;
+
 	coinEffect = new Effect("Data/Effect/Coin.efk");
 
 	HitSE = Audio::Instance().LoadAudioSource("Data/Audio/HitSE.wav");
@@ -82,7 +84,7 @@ void EnemySlime::Update(float elapsedTime)
 
 	UpdateInvincibleTimer(elapsedTime);
 
-	if(!lookPlayer)Despawn(60.0f,elapsedTime);
+	Despawn(elapsedTime);
 
 	model->UpdateAnimation(elapsedTime);
 
@@ -257,6 +259,8 @@ void EnemySlime::TransitionWanderState() {
 
 	//目標地点設定
 	SetRandomTargetPosition();
+
+	lookPlayer = false;
 
 	//タイマーをランダム設定
 	stateTimer = Mathf::RandomRange(10.0f, 15.0f);
@@ -464,9 +468,11 @@ void EnemySlime::UpdateDeathState(float elapsedTime) {
 	}
 }
 
-void EnemySlime::Despawn(float DesTime ,float elapsedTime) {
-	despawnTimer = DesTime;
-	despawnTimer -= elapsedTime;
+void EnemySlime::Despawn(float elapsedTime) {
+	if (!lookPlayer) {
+		despawnTimer -= elapsedTime;
+	}
+
 	if (despawnTimer < 0.0f) {
 		Destroy();
 	}

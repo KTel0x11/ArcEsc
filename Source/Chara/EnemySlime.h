@@ -91,7 +91,7 @@ private:
 	/***************************************************************/
 
 	//デスポーン
-	void Despawn(float desTime,float elapsedTime);
+	void Despawn(float elapsedTime);
 
 private:
 	//ステート

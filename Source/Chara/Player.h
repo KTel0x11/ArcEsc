@@ -47,6 +47,8 @@ public:
 
 	DirectX::XMINT3 GetAxis() { return axis; }
 
+	void SetAxis(DirectX::XMINT3 axis) { this->axis = axis; }
+
 	void PlamReset();
 
 protected:
@@ -193,6 +195,9 @@ private:
 
 /************************************************/
 
+	void DamageAnimation(float elapsedTime);
+
+
 public:
 	void CollisionProjectilesVsEnemies();
 
@@ -204,7 +209,7 @@ public:
 
 	int powerItem;
 
-	//bool OnPoison = false;
+	bool OnPoison = false;
 	bool isDamaged = false;
 	bool spawnKey = false;
 	bool haveKey = false;
@@ -351,6 +356,11 @@ private:
 
 	DirectX::XMFLOAT4 keyColor = { 1,1,1,1 };
 
+	DirectX::XMFLOAT2 HPPosition = { 80.0f,30.0f };
+	DirectX::XMFLOAT2 HPBPosition = {0, 0};
+	DirectX::XMFLOAT2 HPBarPosition = { 156.0f,94.0f };//+76 ,+64
+
+
 
 	Enemy* nearEnemy = nullptr;
 
@@ -363,6 +373,8 @@ private:
 
 	int itemNum;
 	float powerUpTime = 0.0f;
+
+	int animeState = 0;
 
 
 	//float gravity = -1.0f;

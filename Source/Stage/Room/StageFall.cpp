@@ -3,6 +3,7 @@
 #include "Stage/StageManager.h"
 #include "Stage//StageMoveFloor.h"
 #include "Stage/SeesawFloor.h"
+#include"Chara/Player.h"
 #define debug_new new(_NORMAL_BLOCK,__FILE__,__LINE__)
 
 struct Gimmick
@@ -97,10 +98,18 @@ void StageFall::Render(ID3D11DeviceContext* dc, Shader* shader) {
 
 bool StageFall::RayCast(const DirectX::XMFLOAT3& start, const DirectX::XMFLOAT3& end, HitResult& hit) {
 	if (model != nullptr) {
-		return Collision::IntersectRayVsModel(start, end, model, hit);
-	}
+		if (Collision::IntersectRayVsModel(start, end, model, hit)) {
+			Player::Instance().SetAxis(axis);
 
-	/*return nullptr;*/
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	else {
+		return nullptr;
+	}
 }
 
 //スフィアキャスト

@@ -11,6 +11,7 @@
 #include"Stage/StageManager.h"
 #include"Chara/EnemyManager.h"
 #include"Chara/EnemySlime.h"
+#include"Chara/Player.h"
 #define debug_new new(_NORMAL_BLOCK,__FILE__,__LINE__)
 
 

@@ -10,6 +10,7 @@
 #include"Stage/StageManager.h"
 #include"Chara/EnemyManager.h"
 #include"Chara/EnemySlime.h"
+#include"Chara/Player.h"
 #define debug_new new(_NORMAL_BLOCK,__FILE__,__LINE__)
 
 
@@ -122,7 +123,7 @@ void StageCross::Update(float elapsedTime) {
 					}
 					EnemySlime* slime = new EnemySlime();
 					slime->SetPosition({ enemyTransform._41,  enemyTransform._42,   enemyTransform._43 });
-					slime->SetTerritory(slime->GetPosition(), 15.0f);
+					slime->SetTerritory({ enemyTransform._41,  enemyTransform._42,   enemyTransform._43 }, 15.0f);
 					EnemyManager::Instance().Register(slime);
 				}
 			}
@@ -172,10 +173,18 @@ void StageCross::Render(ID3D11DeviceContext* dc, Shader* shader) {
 
 bool StageCross::RayCast(const DirectX::XMFLOAT3& start, const DirectX::XMFLOAT3& end, HitResult& hit) {
 	if (model != nullptr) {
-		return Collision::IntersectRayVsModel(start, end, model, hit);
+		if (Collision::IntersectRayVsModel(start, end, model, hit)) {  
+			Player::Instance().SetAxis(axis);
+			
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
-
-	return nullptr;
+	else {
+		return nullptr;
+	}
 }
 
 //スフィアキャスト

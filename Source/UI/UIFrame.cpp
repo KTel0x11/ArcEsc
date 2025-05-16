@@ -41,8 +41,12 @@ void UIFrame::Update(float elapsedTime) {
 	DamageAnimation(elapsedTime);
 
 	if (GameState::Instance().currentSceneState == GameState::SceneState::SceneGame) {
+		if(Player::Instance().OnPoison){
+			velocity = 0.0f;
+			GearColor = { 0.5f,0.0f,0.5f,1 };
 		
-		if (Player::Instance().isDamaged) {
+		}
+		else if (Player::Instance().isDamaged) {
 			velocity = 0.0f;
 			GearColor = { 1,0.5f,0.5f,1 };
 		}

@@ -130,6 +130,7 @@ protected:
 
 	int weight = 50;
 
+	float oldHealth = 0.0f;
 	float health = 5.0f;
 	float maxHealth = 5.0f;
 

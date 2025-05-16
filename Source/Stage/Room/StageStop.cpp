@@ -1,6 +1,7 @@
 #include"StageStop.h"
 #include"GimmickObj/GimmickManager.h"
 #include"GimmickObj/Gimmick/Coin.h"
+#include"Chara/Player.h"
 
 
 #define debug_new new(_NORMAL_BLOCK,__FILE__,__LINE__)
@@ -124,10 +125,18 @@ void StageStop::Render(ID3D11DeviceContext* dc, Shader* shader) {
 
 bool StageStop::RayCast(const DirectX::XMFLOAT3& start, const DirectX::XMFLOAT3& end, HitResult& hit) {
 	if (model != nullptr) {
-		return Collision::IntersectRayVsModel(start, end, model, hit);
-	}
+		if (Collision::IntersectRayVsModel(start, end, model, hit)) {
+			Player::Instance().SetAxis(axis);
 
-	/*return nullptr;*/
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	else {
+		return nullptr;
+	}
 }
 
 //スフィアキャスト

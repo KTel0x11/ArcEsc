@@ -65,6 +65,7 @@ Player::Player()
 	height = 6;
 	maxHealth = 100;
 	health = maxHealth;
+	oldHealth = maxHealth;
 	friction = 0.9f;
 	gravity = -2.0f;
 	angle = { 0.0f,0.0f,0.0f };
@@ -201,6 +202,8 @@ void Player::Update(float elapsedTime)
 
 	InputUseItem();
 
+	DamageAnimation(elapsedTime);
+
 	//近くの敵を探す
 	SearchNearEnemy();
 
@@ -261,75 +264,75 @@ void Player::UIRender(ID3D11DeviceContext* dc) {
 
 	//Player_HP_UI関連
 	{
-		DirectX::XMFLOAT2 HPPosition = {80.0f,30.0f};
-		
+		float PHPtextureBackWidth = static_cast<float>(spriteHPBack->GetTextureWidth());
+		float PHPtextureBackHeight = static_cast<float>(spriteHPBack->GetTextureHeight());
+		const float BackWidth = 400.0f;
+		const float BackHeight = 100.0f;
+
+
+		float PHPtextureFrameWidth = static_cast<float>(spritePlayerHP->GetTextureWidth());
+		float PHPtextureFrameHeight = static_cast<float>(spritePlayerHP->GetTextureHeight());
+		const float FrameWidth = 400.0f;
+		const float FrameHeight = 100.0f;
+
+
+		HPBPosition = HPPosition;
+		HPBarPosition = { HPPosition.x + 76,HPPosition.y + 64 };
 
 		//プレイヤーHP背景UI
 		{
-			float PHPtextureBackWidth = static_cast<float>(spriteHPBack->GetTextureWidth());
-			float PHPtextureBackHeight = static_cast<float>(spriteHPBack->GetTextureHeight());
-			const float BackWidth = 400.0f;
-			const float BackHeight = 100.0f;
 			//プレイヤーHP背景UI描画
-			spriteHPBack->Render(dc, HPPosition.x, HPPosition.y, BackWidth, BackHeight, 0, 0, PHPtextureBackWidth, PHPtextureBackHeight, 0, 1, 1, 1, 1);
+			spriteHPBack->Render(dc, HPBPosition.x, HPBPosition.y, BackWidth, BackHeight, 0, 0, PHPtextureBackWidth, PHPtextureBackHeight, 0, 1, 1, 1, 1);
 		}
 
 		//プレイヤーHPバーUI
 		{
-
-			DirectX::XMFLOAT2 HPBarPosition = { 156.0f,94.0f };
-
-			float HPRate = health / maxHealth;
-
 			float PHPtextureBarWidth = static_cast<float>(spriteHPBar->GetTextureWidth());
 			float PHPtextureBarHeight = static_cast<float>(spriteHPBar->GetTextureHeight());
-
-
+			float HPRate = health / maxHealth;
+			float HPRate1;
 			float BarWidth = 287.0f;
 			float BarHeight = 24.0f;
-						
-			BarWidth *= HPRate;
+			float backBarWidth = 287.0f;
 
-			if (health <= maxHealth * 0.1f) {
-				HPColor.x = 1.0f;
-				HPColor.y = 0.0f;
+			//プレイヤーHPバーの長さ
+			//イージングでHPバーの長さを変化させる
+			float easing = 0.01f;
+			oldHealth = Mathf::Lerp(oldHealth, health, easing);
+			HPRate1 = Mathf::Lerp(oldHealth/maxHealth,health/maxHealth,easing);
+		
+
+			if (ImGui::Begin("Character", nullptr, ImGuiWindowFlags_None)) {
+
+
+				ImGui::InputFloat("HP",&health);
+				ImGui::InputFloat("OldHP", &oldHealth);
+
+				ImGui::InputFloat("HPRate", &HPRate);
+				ImGui::InputFloat("HPRate1", &HPRate1);
+
 			}
-			else if (health <= maxHealth * 0.3f) {
-				HPColor.x = 1.0f;
-				HPColor.y = 0.5f;
-			}
-			else if (health <= maxHealth * 0.5f) {
-				HPColor.x = 1.0f;
-				HPColor.y = 1.0f;
-			}
-			else {
-				HPColor.x = 0.0f;
-				HPColor.y = 1.0f;
-			}
+			ImGui::End();
+
+
+
+
 
 
 			//プレイヤーHPバーUI描画
-			//spriteHPBar->Render(dc, HPBarPosition.x, HPBarPosition.y, backbarWidth , BarHeight, 0, 0, PHPtextureBarWidth, PHPtextureBarHeight, 0, 1.0f, 1.0f, 1.0f, 1);
-			spriteHPBar->Render(dc, HPBarPosition.x, HPBarPosition.y, BarWidth, BarHeight, 0, 0, PHPtextureBarWidth*HPRate, PHPtextureBarHeight, 0, HPColor.x,HPColor.y,HPColor.z,HPColor.w);
+			spriteHPBar->Render(dc, HPBarPosition.x, HPBarPosition.y, backBarWidth * HPRate1, BarHeight, 0, 0, PHPtextureBarWidth * HPRate1, PHPtextureBarHeight, 0, 1.0f, 1.0f, 1.0f, 1);
+			spriteHPBar->Render(dc, HPBarPosition.x, HPBarPosition.y, BarWidth * HPRate, BarHeight, 0, 0, PHPtextureBarWidth * HPRate, PHPtextureBarHeight, 0, HPColor.x, HPColor.y, HPColor.z, HPColor.w);
 		}
 
 		//プレイヤーHPフレーム
-		{
-			float PHPtextureFrameWidth = static_cast<float>(spritePlayerHP->GetTextureWidth());
-			float PHPtextureFrameHeight = static_cast<float>(spritePlayerHP->GetTextureHeight());
 
-			const float FrameWidth = 400.0f;
-			const float FrameHeight = 100.0f;
 
-			//プレイヤーHPフレームUI描画
-			spritePlayerHP->Render(dc, HPPosition.x, HPPosition.y, FrameWidth, FrameHeight, 0, 0, PHPtextureFrameWidth, PHPtextureFrameHeight, 0, 1, 1, 1, 1);
-		}
+		//プレイヤーHPフレームUI描画
+		spritePlayerHP->Render(dc, HPPosition.x, HPPosition.y, FrameWidth, FrameHeight, 0, 0, PHPtextureFrameWidth, PHPtextureFrameHeight, 0, 1, 1, 1, 1);
+
 
 		if (powerUpTime > 0) {
-
-
-
-			spriteUp->Render(dc, HPPosition.x-10, HPPosition.y-10, 50, 50, 0, 0, 128, 128, 0, 1, 1, 1, 1);
+			spriteUp->Render(dc, HPPosition.x - 10, HPPosition.y - 10, 50, 50, 0, 0, 128, 128, 0, 1, 1, 1, 1);
 		}
 
 
@@ -342,7 +345,7 @@ void Player::UIRender(ID3D11DeviceContext* dc) {
 		}
 
 		//コイン所持数描画
-		spriteKey->Render(dc, 190, 45, 40, 40, 0, 0, 256, 256, 0, keyColor.x, keyColor.y, keyColor.z, keyColor.w );
+		spriteKey->Render(dc, 190, 45, 40, 40, 0, 0, 256, 256, 0, keyColor.x, keyColor.y, keyColor.z, keyColor.w);
 		//コイン所持数描画
 		spriteCoin->Render(dc, 250, 45, 40, 40, 0, 0, 256, 256, 0, 1, 1, 1, 1);
 		NumFont::Instance().NumRender(dc, coin, { 340,45 }, { 40,40 }, 0, { 1,1,0,1 });
@@ -369,7 +372,7 @@ void Player::UIRender(ID3D11DeviceContext* dc) {
 			break;
 
 		case Player::Power:
-			if (powerItem > 0 ) {
+			if (powerItem > 0) {
 
 				spriteItemPower->Render(dc,
 					140, 520,
@@ -387,7 +390,7 @@ void Player::UIRender(ID3D11DeviceContext* dc) {
 			break;
 		}
 
-	
+
 
 
 
@@ -403,8 +406,92 @@ void Player::UIRender(ID3D11DeviceContext* dc) {
 			1, 1, 1, 1);
 
 
+	
+
 	}
 
+
+
+}
+
+void Player::DamageAnimation(float elapsedTime) {
+
+
+	if (OnPoison)
+	{
+		HPColor.x = 0.5f;
+		HPColor.y = 0.0f;
+		HPColor.z = 0.5f;
+	}
+	else if (isDamaged) {
+		HPColor.x = 1.0f;
+		HPColor.y = 0.0f;
+		HPColor.z = 0.0f;
+
+	}
+	
+	else if (health <= maxHealth * 0.1f) {
+		HPColor.x = 1.0f;
+		HPColor.y = 0.0f;
+		HPColor.z = 0.0f;
+	}
+	else if (health <= maxHealth * 0.3f) {
+		HPColor.x = 1.0f;
+		HPColor.y = 0.5f;
+		HPColor.z = 0.0f;
+	}
+	else if (health <= maxHealth * 0.5f) {
+		HPColor.x = 1.0f;
+		HPColor.y = 1.0f;
+		HPColor.z = 0.0f;
+	}
+	else {
+		HPColor.x = 0.0f;
+		HPColor.y = 1.0f;
+		HPColor.z = 0.0f;
+	}
+
+
+	switch (animeState)
+	{
+	case 0://初期位置設定
+		HPPosition = { 80.0f,30.0f };
+		animeState++;
+		break;
+	case 1://ダメージアニメーション
+
+		HPPosition.x += 1000.0f * elapsedTime;
+
+
+		if (HPPosition.x > 130.0f) {
+			HPPosition.x = 130.0f;
+		}
+
+
+		if (HPPosition.x >= 130.0f) {
+			animeState++;
+		}
+		break;
+
+	case 2://ダメージアニメーション
+		HPPosition.x -= 1000.0f * elapsedTime;
+
+		if (HPPosition.x < 80.0f) {
+			HPPosition.x = 80.0f;
+		}
+
+
+		if (HPPosition.x <= 80.0f) {
+			animeState++;
+		}
+		break;
+	case 3://初期位置設定
+		HPPosition = { 80.0f,30.0f };
+		animeState = -1;
+		break;
+	default:
+		break;
+	}
 
 }
 
@@ -1520,6 +1607,7 @@ void Player::UpdateAttackState(float elapsedTime) {
 void Player::TransitionDamageState() {
 	state = State::Damage;
 	isDamaged = true;
+	animeState = 0;
 	UIFrame::Instance().animeState = 0;
 	//ダメージアニメーション再生
 	model->PlayAnimation(Anim_Damaged, false,0.2f,0.2f,1.3f);

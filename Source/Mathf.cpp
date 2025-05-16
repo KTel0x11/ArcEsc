@@ -11,6 +11,10 @@ float Mathf::Lerp(float a, float b, float t) {
 
 //指定範囲のランダム値を計算する
 float Mathf::RandomRange(float min, float max) {
-	srand((unsigned int)time(NULL));
-	return static_cast<float>(rand() % RAND_MAX / RAND_MAX * (max - min) + min);
+
+float range = max - min;
+float randomValue = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+return min + (randomValue * range);
+
+
 }
