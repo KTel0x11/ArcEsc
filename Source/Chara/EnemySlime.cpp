@@ -82,6 +82,8 @@ void EnemySlime::Update(float elapsedTime)
 
 	UpdateInvincibleTimer(elapsedTime);
 
+	if(!lookPlayer)Despawn(60.0f,elapsedTime);
+
 	model->UpdateAnimation(elapsedTime);
 
 	model->UpdateTransform(transform);
@@ -297,6 +299,8 @@ void EnemySlime::TransitionIdleState() {
 	//タイマーをランダム設定
 	stateTimer = Mathf::RandomRange(3.0f, 5.0f);
 
+	lookPlayer = false;
+
 	//待機アニメーション再生
 	model->PlayAnimation(Anim_IdleNormal, true);
 }
@@ -324,6 +328,8 @@ void EnemySlime::TransitionPursuitState() {
 
 	//数秒間追跡するタイマーをランダム設定
 	stateTimer = Mathf::RandomRange(3.0f, 5.0f);
+
+	lookPlayer = true;
 
 	//歩きアニメーション再生
 	model->PlayAnimation(Anim_RunFWD, true);
@@ -361,6 +367,8 @@ void EnemySlime::UpdatePursuitState(float elapsedTime) {
 void EnemySlime::TransitionAttackState() {
 	state = State::Attack;
 
+	lookPlayer = true;
+
 	//攻撃アニメーション再生
 	model->PlayAnimation(Anim_Attack1, false);
 
@@ -384,7 +392,7 @@ void EnemySlime::TransitionIdleBattleState() {
 	state = State::IdleBattle;
 	//数秒間待機するタイマーをランダム設定
 	stateTimer = Mathf::RandomRange(0.5f, 1.5f);
-
+	lookPlayer = true;
 	//戦闘待機アニメーション再生
 	model->PlayAnimation(Anim_IdleBattle, true);
 }
@@ -423,7 +431,7 @@ void EnemySlime::UpdateIdleBattleState(float elapsedTime) {
 //ダメージステートへ遷移
 void EnemySlime::TransitionDamageState() {
 	state = State::Damage;
-
+	lookPlayer = true;
 	//ダメージアニメーション再生
 	model->PlayAnimation(Anim_GetHit, false);
 }
@@ -454,6 +462,16 @@ void EnemySlime::UpdateDeathState(float elapsedTime) {
 		coinEffect->Play(position, 2.0f);
 		Destroy();
 	}
+}
+
+void EnemySlime::Despawn(float DesTime ,float elapsedTime) {
+	despawnTimer = DesTime;
+	despawnTimer -= elapsedTime;
+	if (despawnTimer < 0.0f) {
+		Destroy();
+	}
+
+
 }
 
 void EnemySlime::DrawDebugGUI() {

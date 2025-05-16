@@ -1,10 +1,11 @@
 #include"PointUI.h"
+#include"GameState.h"
 
 
 
 #define debug_new new(_NORMAL_BLOCK,__FILE__,__LINE__)
 
-PointUI::PointUI() {
+void PointUI::Initialize() {
 
 	//スプライト作成
 	spritePoint = new Sprite("Data/Sprite/Point.png");
@@ -13,7 +14,7 @@ PointUI::PointUI() {
 
 }
 
-PointUI::~PointUI() {
+void PointUI::Finalize() {
 	//スプライト削除
 	if (spritePoint != nullptr) {
 		delete spritePoint;
@@ -26,22 +27,15 @@ PointUI::~PointUI() {
 void PointUI::Update(float elapsedTime) {
 
 	
-	if (gamePad.GetButtonDown() & anyPadButton|| gamePad.GetAxisLY()|| gamePad.GetAxisLX()) {
-		padFlg = true;
-		mouseFlg = false;
-	}
-	if (mouse.GetButtonDown() & anyMouseButton) {
-		padFlg = false;
-		mouseFlg = true;
-	}
 
-	if (padFlg) {
+
+	if (GameState::Instance().controllerState==GameState::ControllerState::Controller) {
 		//カーソル移動処理
 		PointPos.y -= gamePad.GetAxisLY() * elapsedTime * moveSpeed;
 		PointPos.x += gamePad.GetAxisLX() * elapsedTime * moveSpeed;
 	}
 
-	if (mouseFlg) {
+	if (GameState::Instance().controllerState == GameState::ControllerState::MouseAndKeyboard) {
 		PointPos.x = mouse.GetPositionX();
 		PointPos.y = mouse.GetPositionY();
 	}

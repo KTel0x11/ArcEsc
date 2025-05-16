@@ -4,6 +4,9 @@
 #include "SceneLoading.h"
 #include "SceneManager.h"
 #include"Input/Input.h"
+#include"UI/UIFrame.h"
+#include"UI/PointUI.h"	
+#include"GameState.h"
 
 
 
@@ -13,6 +16,7 @@ void SceneTitle::Initialize()
 {
 	//スプライトの初期化
 	sprite = new Sprite("Data/Sprite/Title.png");
+	GameState::Instance().SetSceneState(GameState::SceneState::SceneTitle);
 }
 
 
@@ -43,6 +47,7 @@ void SceneTitle::Update(float elapsedTime)
 		SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
 	}
 
+	UIFrame::Instance().Update(elapsedTime);
 
 }
 
@@ -59,6 +64,7 @@ void SceneTitle::Render() {
 	dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	dc->OMSetRenderTargets(1, &rtv, dsv);
 
+	
 
 	//2Dスプライト描画
 	{
@@ -75,7 +81,7 @@ void SceneTitle::Render() {
 	}
 
 
-
+	UIFrame::Instance().Render(graphics, dc);
 
 
 }

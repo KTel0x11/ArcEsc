@@ -43,6 +43,8 @@ public:
 
 	void SetMoveSpeed(const float& speed) { this->moveSpeed = speed; }
 
+
+
 private :
 	//s—ñXVˆ—
 	void UpdateTransform();

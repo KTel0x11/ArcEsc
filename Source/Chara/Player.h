@@ -45,6 +45,8 @@ public:
 
 	bool AddCoin(int Coin);
 
+	DirectX::XMINT3 GetAxis() { return axis; }
+
 	void PlamReset();
 
 protected:
@@ -77,6 +79,10 @@ private:
 
 	//回避入力処理
 	bool InputDodge();
+
+	//アイテム使用入力処理
+	void InputUseItem();
+
 /***************************************************/
 
 /********************当たり判定処理*****************/
@@ -101,6 +107,8 @@ private:
 	void ResetVelocity();
 
 	void UseItem();
+
+	void SelectItem();
 
 	void UpdatePowerUpTimer(float elapsedTime);
 
@@ -197,7 +205,7 @@ public:
 	int powerItem;
 
 	//bool OnPoison = false;
-
+	bool isDamaged = false;
 	bool spawnKey = false;
 	bool haveKey = false;
 	bool clear = false;
@@ -297,6 +305,8 @@ private:
 	DirectX::XMFLOAT3 targetPosition = { 0,0,0 };
 	DirectX::XMFLOAT3 nearEnemyPosition = { 0,0,0 };
 
+	DirectX::XMINT3 axis = { 0,0,0 };
+
 	float moveSpeed = 20.0f;
 	float turnSpeed = DirectX::XMConvertToRadians(360);
 	float attackSpeed = 50.0f;
@@ -317,7 +327,7 @@ private:
 	bool LandingFlag = false;
 	bool Dead = false;
 
-
+	
 
 	
 

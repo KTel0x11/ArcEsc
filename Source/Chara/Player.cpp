@@ -12,6 +12,8 @@
 #include"Audio/Audio.h"
 #include"GameState.h"
 #include"UI/NumFont.h"
+#include"UI/PointUI.h"
+#include"UI/UIFrame.h"
 
 static Player* instance = nullptr;
 
@@ -196,6 +198,8 @@ void Player::Update(float elapsedTime)
 			break;
 		}
 	}
+
+	InputUseItem();
 
 	//近くの敵を探す
 	SearchNearEnemy();
@@ -549,11 +553,21 @@ bool Player::InputMove(float elapsedTime) {
 //攻撃入力処理
 bool Player::InputAttack()
 {
-	GamePad& gamePad = Input::Instance().GetGamePad();
-	if( gamePad.GetButtonDown() & GamePad::BTN_B)
+	if (GameState::Instance().controllerState == GameState::ControllerState::Controller)
 	{
-		return true;
+		GamePad& gamePad = Input::Instance().GetGamePad();
+		if (gamePad.GetButtonDown() & GamePad::BTN_X) {
+			return true;
+		}
 	}
+	else if (GameState::Instance().controllerState == GameState::ControllerState::MouseAndKeyboard)
+	{
+		Mouse& mouse = Input::Instance().GetMouse();
+		if (mouse.GetButtonDown() & Mouse::BTN_LEFT) {
+			return true;
+		}
+	}
+
 	return false;
 }
 
@@ -578,16 +592,33 @@ bool Player::InputDodge() {
 
 //ジャンプ入力処理
 bool Player::InputJump() {
+
 	GamePad& gamePad = Input::Instance().GetGamePad();
-	if (gamePad.GetButtonDown() & GamePad::BTN_A)
+
+	if (GameState::Instance().controllerState == GameState::ControllerState::Controller)
 	{
-		//ジャンプ回数制限
-		if (jumpCount < jumpLimit) {
-			//ジャンプ
-			jumpCount++;
-			Jump(jumpSpeed);
-			//ジャンプ入力した
-			return true;
+		if (gamePad.GetButtonDown() & GamePad::BTN_B) {
+			//ジャンプ回数制限
+			if (jumpCount < jumpLimit) {
+				//ジャンプ
+				jumpCount++;
+				Jump(jumpSpeed);
+				//ジャンプ入力した
+				return true;
+			}
+		}
+	}
+	else if (GameState::Instance().controllerState == GameState::ControllerState::MouseAndKeyboard)
+	{
+		if (GetAsyncKeyState(VK_SPACE) & 1) {
+			//ジャンプ回数制限
+			if (jumpCount < jumpLimit) {
+				//ジャンプ
+				jumpCount++;
+				Jump(jumpSpeed);
+				//ジャンプ入力した
+				return true;
+			}
 		}
 	}
 
@@ -677,33 +708,64 @@ void Player::InputProjectile()
 
 }
 
+//アイテム使用入力処理
+void Player::InputUseItem() {
+	if (GameState::Instance().currentState == GameState::State::Game) {
+		UseItem();
+		SelectItem();
+	}
+}
+
+
 //アイテム使用処理
 void Player::UseItem() {
 
-	GamePad& gamepad = Input::Instance().GetGamePad();
-	//アイテム選択
-	if (GameState::Instance().currentState == GameState::State::Game) {
-		if (gamepad.GetButtonDown() & GamePad::BTN_LEFT_SHOULDER || GetAsyncKeyState('Q') & 1) {
-			itemNum--;
-			if (itemNum < 0) {
-				itemNum = MAX - 1;
-			}
-		}
-		if (gamepad.GetButtonDown() & GamePad::BTN_RIGHT_SHOULDER || GetAsyncKeyState('E') & 1) {
-			itemNum++;
-			if (itemNum > MAX - 1) {
-				itemNum = Life;
-			}
-		}
-
-
+	if (GameState::Instance().controllerState == GameState::ControllerState::Controller)
+	{
+		GamePad& gamepad = Input::Instance().GetGamePad();
 		//アイテム使用処理
 		if (gamepad.GetButtonDown() & GamePad::BTN_Y) {
 			switch (static_cast<Item>(itemNum))
 			{
 
 			case Player::Life:
-				if (lifeItem > 0 && health < maxHealth ) {
+				if (lifeItem > 0 && health < maxHealth) {
+					health += 20.0f;
+					if (health > maxHealth) {
+						health = maxHealth;
+					}
+					lifeItem--;
+				}
+				break;
+
+			case Player::Power:
+
+				if (powerItem > 0 && !(powerUpTime > 0.0f)) {
+					powerUpTime = 10.0f;
+					powerItem--;
+
+				}
+
+				break;
+
+			default:
+
+				break;
+			}
+		}
+	
+	}
+	else if (GameState::Instance().controllerState == GameState::ControllerState::MouseAndKeyboard)
+
+	{
+		Mouse& mouse = Input::Instance().GetMouse();
+		//アイテム使用処理
+		if (mouse.GetButtonDown() & Mouse::BTN_RIGHT) {
+			switch (static_cast<Item>(itemNum))
+			{
+
+			case Player::Life:
+				if (lifeItem > 0 && health < maxHealth) {
 					health += 20.0f;
 					if (health > maxHealth) {
 						health = maxHealth;
@@ -724,7 +786,47 @@ void Player::UseItem() {
 		}
 	}
 
+
+
 }
+
+//アイテム選択処理
+void Player::SelectItem() {
+	//アイテム選択
+	if (GameState::Instance().controllerState == GameState::ControllerState::Controller)//pad
+	{
+		GamePad& gamepad = Input::Instance().GetGamePad();
+		if (gamepad.GetButtonDown() & GamePad::BTN_LEFT_SHOULDER) {
+			itemNum--;
+			if (itemNum < 0) {
+				itemNum = MAX - 1;
+			}
+		}
+		if (gamepad.GetButtonDown() & GamePad::BTN_RIGHT_SHOULDER) {
+			itemNum++;
+			if (itemNum > MAX - 1) {
+				itemNum = Life;
+			}
+		}
+	}
+	else if (GameState::Instance().controllerState == GameState::ControllerState::MouseAndKeyboard)
+	{
+		if (GetAsyncKeyState('Q') & 1) {
+			itemNum--;
+			if (itemNum < 0) {
+				itemNum = MAX - 1;
+			}
+		}
+		if (GetAsyncKeyState('E') & 1) {
+			itemNum++;
+			if (itemNum > MAX - 1) {
+				itemNum = Life;
+			}
+		}
+	}
+
+}
+
 void Player::UpdatePowerUpTimer(float elapsedTime)
 {
 	if (powerUpTime > 0.0f)
@@ -1039,6 +1141,7 @@ void Player::TransitionIdleState() {
 	state = State::Idle;
 	isGuard = false;
 	CounterFlag = false;
+	isDamaged = false;
 	//待機アニメーション再生
 	model->PlayAnimation(Anim_WTD_Stand, true,0.2f,2.4f,3.66f);
 	WalkSE->Stop();
@@ -1416,7 +1519,8 @@ void Player::UpdateAttackState(float elapsedTime) {
 //ダメージステートへ遷移
 void Player::TransitionDamageState() {
 	state = State::Damage;
-
+	isDamaged = true;
+	UIFrame::Instance().animeState = 0;
 	//ダメージアニメーション再生
 	model->PlayAnimation(Anim_Damaged, false,0.2f,0.2f,1.3f);
 }
@@ -1426,7 +1530,6 @@ void Player::UpdateDamageState(float elapsedTime) {
 	//ダメージアニメーションが終ったら待機ステートへ遷移
 	
 	if (!model->IsPlayAnimation()) {
-		
 		TransitionIdleState();
 	}
 }

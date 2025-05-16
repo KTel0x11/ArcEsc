@@ -3,7 +3,7 @@
 
 #include"Chara/Player.h"
 #include"Camera/CameraController.h"
-#include"Stage/CreateMap.h"
+#include"UI/CreateMap.h"
 #include"Scene.h"
 #include"Graphics/Sprite.h"
 #include"Audio/AudioSource.h"

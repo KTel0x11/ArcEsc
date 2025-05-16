@@ -9,6 +9,14 @@ public:
 		return instance;
 	}
 
+	enum SceneState
+	{
+		SceneTitle,
+		SceneLoading,
+		SceneGame,
+		SceneMAX
+	};
+
 	enum  State
 	{
 		Start,
@@ -22,12 +30,37 @@ public:
 		MAX
 	};
 
-	GameState() { currentState = Start; }
+	GameState() { }
 	~GameState() {};
 
+	//‰Šú‰»ˆ—
+	void Initialize() { 
+	currentState = State::Start;
+	currentSceneState = SceneState::SceneTitle;
+	}
+	//I—¹ˆ—
+	void Finalize() {
+		currentState = State::Start;
+		currentSceneState = SceneState::SceneTitle;
+	}
+
+
+
 	void SetState(State state) { currentState = state; }
+	State GetState() { return currentState; }
+	void SetSceneState(SceneState state) { currentSceneState = state; }
+	SceneState GetSceneState() { return currentSceneState; }
 	
 	State currentState;
+	SceneState currentSceneState;
+
+	enum ControllerState
+	{
+		Controller,
+		MouseAndKeyboard,
+	};
+	ControllerState controllerState = Controller;
+
 
 
 };

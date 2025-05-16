@@ -46,10 +46,10 @@ public:
 	void AddImpulse(const DirectX::XMFLOAT3& impulse);
 
 	//Œ’Nó‘Ô‚ğæ“¾
-	int GetHealth() const { return health; }
+	float GetHealth() const { return health; }
 
 	//Å‘åŒ’Nó‘Ô‚ğæ“¾
-	int GetMaxHealth() const { return maxHealth; }
+	float GetMaxHealth() const { return maxHealth; }
 
 	//d‚³æ“¾
 	int GetWeight()const { return weight; }

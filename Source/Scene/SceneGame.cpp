@@ -11,7 +11,7 @@
 #include"Stage/StageManager.h"
 #include"Stage/StageMain.h"
 #include"Stage/StageMoveFloor.h"
-#include"Stage/CreateMap.h"
+#include"UI/CreateMap.h"
 #include"GimmickObj/GimmickManager.h"
 #include"Mathf.h"
 #include"Audio/AudioSource.h"
@@ -26,8 +26,9 @@
 void SceneGame::Initialize()
 {
 	//マップの生成、マップ制作の初期化
-	createMap = debug_new CreateMap();
-	startPosition = createMap->GetStartPosition();
+	CreateMap::Instance().Initialize();
+	CreateMap& createMap = CreateMap::Instance();
+	startPosition = createMap.GetStartPosition();
 	startPosition.y = 50.0f;
 
 	//ステージの初期化	
@@ -57,9 +58,6 @@ void SceneGame::Initialize()
 
 	//カメラのコントローラー初期化
 	cameraController = new CameraController();
-
-	//ゲーム中の枠初期化
-	frameUI = new UIFrame();
 	
 
 
@@ -76,7 +74,7 @@ void SceneGame::Initialize()
 
 	//最初のステートセット
 	GameState::Instance().SetState(GameState::State::Start);
-
+	GameState::Instance().SetSceneState(GameState::SceneState::SceneGame);
 
 
 	//bgmの初期化
@@ -127,16 +125,6 @@ void SceneGame::Finalize()
 			gauge = nullptr;
 		}
 
-		if (createMap != nullptr) {
-			delete createMap;
-			createMap = nullptr;
-		}
-
-		if (frameUI != nullptr) {
-			delete frameUI;
-			frameUI = nullptr;
-		}
-
 	}
 
 	//カメラの終了化
@@ -152,8 +140,17 @@ void SceneGame::Finalize()
 	}
 
 	//BGMの終了化
-	BGM->Stop();
-	delete BGM;
+	if (BGM != nullptr) {
+		delete BGM;
+		BGM = nullptr;
+	}
+
+	//マップ制作の終了化
+	CreateMap::Instance().Finalize();
+	//ステージの終了化
+
+
+
 	//その他マネージャーの終了化
 	EnemyManager::Instance().Clear();
 	GimmickManager::Instance().Clear();
@@ -183,7 +180,7 @@ void SceneGame::Update(float elapsedTime)
 	//コントローラを取得
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
-
+	UIFrame::Instance().Update(elapsedTime);
 
 	switch (GameState::Instance().currentState)
 	{
@@ -206,7 +203,7 @@ void SceneGame::Update(float elapsedTime)
 		//エフェクト更新
 		EffectManager::Instance().Update(elapsedTime);
 		//ゲーム画面のフレーム更新
-		frameUI->Update(elapsedTime);
+		
 		//カメラ更新
 		cameraController->Update(elapsedTime);
 
@@ -220,7 +217,7 @@ void SceneGame::Update(float elapsedTime)
 
 		//マップ制作モードに切り替え
 		if (gamePad.GetButtonDown() & GamePad::BTN_X) {
-			createMap->SetState(CreateMap::State::STARTMENU);
+			CreateMap::Instance().SetState(CreateMap::State::STARTMENU);
 			GameState::Instance().SetState(GameState::State::MapCreate);
 			break;
 		}
@@ -264,9 +261,9 @@ void SceneGame::Update(float elapsedTime)
 
 
 		//マップ制作関数更新
-		createMap->Update(elapsedTime);
+		CreateMap::Instance().Update(elapsedTime);
 		//ゲーム画面のフレーム更新
-		frameUI->Update(elapsedTime);
+		//frameUI->Update(elapsedTime);
 
 		//ゲームに戻る
 		if (gamePad.GetButtonDown() & GamePad::BTN_X|| gamePad.GetButtonDown() & GamePad::BTN_A) {
@@ -286,7 +283,7 @@ void SceneGame::Update(float elapsedTime)
 		cameraController->Update(elapsedTime);
 
 		//ゲーム画面のフレーム更新
-		frameUI->Update(elapsedTime);
+		//frameUI->Update(elapsedTime);
 
 		//ゲームに戻る
 		if (gamePad.GetButtonDown() & GamePad::BTN_START || GetAsyncKeyState('P') & 1) {	//コントローラー：START　キーボード:P
@@ -467,7 +464,8 @@ void SceneGame::Render()
 			//createMap->Render(dc);
 
 			//ゲームUIフレーム描画
-			frameUI->Render(graphics, dc);
+			//frameUI->Render(graphics, dc);
+			UIFrame::Instance().Render(graphics, dc);
 
 			//ポーズのボタンガイド
 			{
@@ -515,8 +513,8 @@ void SceneGame::Render()
 		}
 		{
 			//マップ制作の描画
-			createMap->Render(dc);
-	
+			CreateMap::Instance().Render(dc);
+			
 
 		}
 		// 2Dスプライト描画
@@ -524,8 +522,8 @@ void SceneGame::Render()
 		
 			//ゲームUIフレーム描画
 
-			frameUI->Render(graphics, dc);
-
+			//frameUI->Render(graphics, dc);
+			UIFrame::Instance().Render(graphics, dc);
 			{
 				float PauseTexWidth = static_cast<float>(spritePauseButton->GetTextureWidth());
 				float PauseTexHeight = static_cast<float>(spritePauseButton->GetTextureHeight());
@@ -590,8 +588,8 @@ void SceneGame::Render()
 
 			//ゲームUIフレーム描画
 
-			frameUI->Render(graphics, dc);
-
+			//frameUI->Render(graphics, dc);
+			UIFrame::Instance().Render(graphics, dc);
 		}
 		break;
 	}
@@ -641,8 +639,8 @@ void SceneGame::Render()
 
 
 			//ゲームUIフレーム描画
-			frameUI->Render(graphics, dc);
-
+			//frameUI->Render(graphics, dc);
+			UIFrame::Instance().Render(graphics, dc);
 
 
 
@@ -695,8 +693,8 @@ void SceneGame::Render()
 			//createMap->Render(dc);
 
 			//ゲームUIフレーム描画
-			frameUI->Render(graphics, dc);
-
+			//frameUI->Render(graphics, dc);
+			UIFrame::Instance().Render(graphics, dc);
 			{
 				float OverTexWidth = static_cast<float>(spriteOver->GetTextureWidth());
 				float OverTexHeight = static_cast<float>(spriteOver->GetTextureHeight());

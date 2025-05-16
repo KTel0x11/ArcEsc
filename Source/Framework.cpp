@@ -5,6 +5,11 @@
 #include "Input/Input.h"
 #include "Framework.h"
 #include "Chara/EffectManager.h"
+#include "UI/PointUI.h"
+#include "UI/UIFrame.h"
+#include "UI/NumFont.h"
+#include"GameState.h"
+
 //#include "Audio/Audio.h"
 
 #include"Scene/SceneTitle.h"
@@ -23,20 +28,30 @@ Framework::Framework(HWND hWnd)
 {
 
 	Audio::Instance().Initialize();
-
+	UIFrame::Instance().Initialize();
+	PointUI::Instance().Initialize();
 	EffectManager::Instance().Initialize();
 	SceneManager::Instance().ChangeScene(new  SceneTitle);
+	GameState::Instance().Initialize();
+	GameState::Instance().controllerState = GameState::ControllerState::MouseAndKeyboard;
+	
 }
 
 // デストラクタ
 Framework::~Framework()
 {
 
+	UIFrame::Instance().Finalize();
+	PointUI::Instance().Finalize();
+
 	SceneManager::Instance().Clear();
 	
 	EffectManager::Instance().Finalize();
 
 	Audio::Instance().Finalize();
+
+	GameState::Instance().Finalize();
+
 
 }
 
@@ -45,6 +60,8 @@ void Framework::Update(float elapsedTime/*Elapsed seconds from last frame*/)
 {
 	// 入力更新処理
 	input.Update();
+
+	PointUI::Instance().Update(elapsedTime);
 
 	// シーン更新処理
 	SceneManager::Instance().Update(elapsedTime);

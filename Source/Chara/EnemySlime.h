@@ -90,7 +90,8 @@ private:
 
 	/***************************************************************/
 
-
+	//デスポーン
+	void Despawn(float desTime,float elapsedTime);
 
 private:
 	//ステート
@@ -141,6 +142,10 @@ private:
 	float searchRange = 25.0f;//索敵範囲
 	float attackRange = 5.0f;//攻撃射程範囲
 	
+	float despawnTimer = 0.0f;
+
+	bool lookPlayer = false;
+
 	AudioSource* HitSE = nullptr;
 
 

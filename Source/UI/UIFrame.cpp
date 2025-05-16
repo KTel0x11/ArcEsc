@@ -3,8 +3,8 @@
 #include"GameState.h"
 #define debug_new new(_NORMAL_BLOCK,__FILE__,__LINE__)
 
-
-UIFrame::UIFrame() {
+ 
+void UIFrame::Initialize() {
 	
 	
 	spriteFrame = new Sprite("Data/Sprite/GameFrame.png");
@@ -14,7 +14,7 @@ UIFrame::UIFrame() {
 	
 }
 
-UIFrame::~UIFrame() {
+void UIFrame::Finalize() {
 
 	if (spriteGear1 != nullptr) {
 		delete spriteGear1;
@@ -37,24 +37,49 @@ UIFrame::~UIFrame() {
 
 //フレーム更新
 void UIFrame::Update(float elapsedTime) {
-	//歯車回転処理
-	GearAng += 5.0f * Player::Instance().GetHealth() * elapsedTime;
 
-	//歯車が一回転したら
-	if (GearAng > 360.0f) {
-		GearAng = 0;//回転位置リセット
-		gearNum++;//回転数を増やす
-	
-	}
+	DamageAnimation(elapsedTime);
 
-	if (gearNum == ADD_COIN_GEAR) {	//歯車が一定数回転したら
-		if (GameState::Instance().currentState == GameState::State::Game) {
-			Player::Instance().AddCoin(1);//コインが１増える
+	if (GameState::Instance().currentSceneState == GameState::SceneState::SceneGame) {
+		
+		if (Player::Instance().isDamaged) {
+			velocity = 0.0f;
+			GearColor = { 1,0.5f,0.5f,1 };
+		}
+		else {
+
+			GearColor = { 1,1,1,1 };
+
+			if ((Player::Instance().GetHealth() / Player::Instance().GetMaxHealth()) * MAX_GEAR_SPEED  > velocity) {
+				velocity = (Player::Instance().GetHealth() / Player::Instance().GetMaxHealth()) * MAX_GEAR_SPEED;
+			}
+			else {
+				velocity += ToggleSpeed * elapsedTime;
+			}
+
+		}
+		
+
+		//回転
+		GearAng += velocity * (Player::Instance().GetHealth() / Player::Instance().GetMaxHealth()) * elapsedTime;
+
+
+		//歯車が一回転したら
+		if (GearAng > 360.0f) {
+			GearAng -= GearAng;//回転位置リセット
+			gearNum++;//回転数を増やす
+
 		}
 
-		gearNum = 0;
+	
 	}
-
+	else {
+		ToggleSpeed = 50.0f;
+		GearAng += ToggleSpeed * elapsedTime;
+		if (GearAng > 360.0f) {
+			GearAng -= GearAng;//回転位置リセット
+		}
+	}
 
 }
 
@@ -75,7 +100,66 @@ void UIFrame::Render(Graphics& graphics,ID3D11DeviceContext* dc) {
 	float Gear1TexHeight = static_cast<float>(spriteGear1->GetTextureHeight());
 
 
-	spriteGear->Render(dc, 1120, 550, 256, 256, 0, 0, GearTexWidth, GearTexHeight, -GearAng, 1, 1, 1, 1);
-	spriteGear1->Render(dc, -50, -40, 128, 128, 0, 0, Gear1TexWidth, Gear1TexHeight, GearAng, 1, 1, 1, 1);
+
+	spriteGear->Render(dc, GearPos.x, GearPos.y, GearSize.x, GearSize.y, 0, 0, GearTexWidth, GearTexHeight, -GearAng, GearColor.x, GearColor.y, GearColor.z, GearColor.w);
+
+	spriteGear1->Render(dc, Gear1Pos.x, Gear1Pos.y, Gear1Size.x, Gear1Size.y, 0, 0, Gear1TexWidth, Gear1TexHeight, GearAng * 2.0f, GearColor.x, GearColor.y, GearColor.z, GearColor.w);
+
+
+
+}
+
+//ダメージアニメーション
+void UIFrame::DamageAnimation(float elapsedTime) {
+
+	switch (animeState)
+	{
+	case 0://初期位置設定
+		GearPos = { 1120,550 };
+		Gear1Pos = { -50,-40 };
+		animeState++;
+		break;
+	case 1://ダメージアニメーション
+
+		GearPos.x += 500.0f * elapsedTime;
+		Gear1Pos.x += 500.0f * elapsedTime;
+
+		if (GearPos.x > 1150.0f) {
+			GearPos.x = 1150.0f;
+		}
+		if (Gear1Pos.x > -20.0f) {
+			Gear1Pos.x = -20.0f;
+		}
+
+
+		if (GearPos.x >= 1150.0f||Gear1Pos.x >= -20.0f) {
+			animeState++;
+		}
+		break;
+
+	case 2://ダメージアニメーション
+		GearPos.x -= 500.0f * elapsedTime;
+		Gear1Pos.x -= 500.0f * elapsedTime;
+		if (GearPos.x < 1120.0f) {
+			GearPos.x = 1120.0f;
+		}
+		if (Gear1Pos.x < -50.0f) {
+			Gear1Pos.x = -50.0f;
+		}
+
+		if (GearPos.x <= 1120.0f || Gear1Pos.x <= -50.0f) {
+			animeState++;
+		}
+		break;
+	case 3://初期位置設定
+		GearPos = { 1120,550 };
+		Gear1Pos = { -50,-40 };
+		animeState = -1;
+		break;
+	default:
+		break;
+
+
+	}
 
 }

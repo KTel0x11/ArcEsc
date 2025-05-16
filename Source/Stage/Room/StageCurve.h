@@ -37,6 +37,10 @@ public:
 	//角度設定
 	virtual void SetAngle(const DirectX::XMFLOAT3& angle) { this->angle = angle; }
 
+	//軸設定
+	virtual void SetAxis(const DirectX::XMINT3& axis) { this->axis = axis; }
+
+
 private:
 	//行列更新処理
 	void UpdateTransform();
@@ -48,6 +52,7 @@ private:
 	DirectX::XMFLOAT3 position = { 0,0,0 };
 	DirectX::XMFLOAT3 angle = { 0,0,0 };
 	DirectX::XMFLOAT3 scale = { 1,1,1 };
+	DirectX::XMINT3 axis = { 0,0,0 };
 	DirectX::XMFLOAT4X4 transform = { 1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1 };
 	
 

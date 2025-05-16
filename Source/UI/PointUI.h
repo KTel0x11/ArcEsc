@@ -8,8 +8,22 @@ class PointUI
 {
 public:
 
-	PointUI();
-	~PointUI();
+	PointUI() {};
+	~PointUI() {};
+
+	//初期化処理
+	void Initialize();
+
+	//終了処理
+	void Finalize();
+
+	//インスタンス取得
+	static PointUI& Instance()
+	{
+		static PointUI instance;
+		return instance;
+	}
+
 
 	//更新処理
 	void Update(float elapsedTime);

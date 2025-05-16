@@ -2,6 +2,9 @@
 #include "Input/Input.h"
 #include"SceneLoading.h"
 #include"SceneManager.h"
+#include"UI/UIFrame.h"
+#include"UI/PointUI.h"
+#include"GameState.h"
 
 #define debug_new new(_NORMAL_BLOCK,__FILE__,__LINE__)
 
@@ -14,6 +17,9 @@ void SceneLoading::Initialize() {
 	spriteLogo = new Sprite("Data/Sprite/UnityLogo.png");
 	spriteLoading = new Sprite("Data/Sprite/LoadingLogo.png");
 	spriteBack = new Sprite("Data/Sprite/LoadingBack.png");
+
+	GameState::Instance().SetSceneState(GameState::SceneState::SceneLoading);
+
 }
 
 
@@ -72,6 +78,9 @@ void  SceneLoading::Update(float elapsedTime) {
 			SceneManager::Instance().ChangeScene(nextScene);
 		}
 	}
+
+	UIFrame::Instance().Update(elapsedTime);
+
 }
 
 void SceneLoading::Render()
@@ -86,6 +95,7 @@ void SceneLoading::Render()
 	dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	dc->OMSetRenderTargets(1, &rtv, dsv);
 
+	
 	
 	{
 		float screenWidth = 512;
@@ -142,7 +152,7 @@ void SceneLoading::Render()
 
 
 	}
-	
+	UIFrame::Instance().Render(graphics, dc);
 
 
 
