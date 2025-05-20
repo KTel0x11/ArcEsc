@@ -175,6 +175,11 @@ private:
 		DirectX::XMFLOAT2 spriteMakePos = { 1800,50 };
 		DirectX::XMFLOAT2 spriteMakeSize = { 200,100 };
 		DirectX::XMFLOAT4 MakeColor = { 1,1,1,1 };
+
+		Sprite* spriteMakeText = nullptr;
+		DirectX::XMFLOAT2 spriteMakeTextPos = { 50,200 };
+		DirectX::XMFLOAT2 spriteMakeTextSize = { 300,50 };
+
 	//ショップスプライト関係
 		Sprite* spriteShop = nullptr;
 		DirectX::XMFLOAT2 spriteShopPos = { 1900, 200 };

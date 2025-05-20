@@ -266,10 +266,10 @@ void SceneGame::Update(float elapsedTime)
 		//frameUI->Update(elapsedTime);
 
 		//ÉQÅ[ÉÄÇ…ñﬂÇÈ
-		if (gamePad.GetButtonDown() & GamePad::BTN_X|| gamePad.GetButtonDown() & GamePad::BTN_A) {
+	/*	if (gamePad.GetButtonDown() & GamePad::BTN_X|| gamePad.GetButtonDown() & GamePad::BTN_A) {
 			GameState::Instance().SetState(GameState::State::Game);
 			break;
-		}
+		}*/
 
 
 		break;

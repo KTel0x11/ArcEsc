@@ -35,7 +35,7 @@ public:
 	int animeState = -1;
 
 private:
-	const float MAX_GEAR_SPEED = 20.0f;
+	const float MAX_GEAR_SPEED = 10.0f;
 
 	Sprite* spriteFrame = nullptr;
 	Sprite* spriteGear = nullptr;

@@ -17,6 +17,7 @@
 #include"Stage/Room/StageKey.h"
 #include"UI//NumFont.h"
 #include"UI/PointUI.h"
+#include"UI/MessageWindow.h"
 #include"GameState.h"
 
 
@@ -111,6 +112,9 @@ void CreateMap::Initialize() {
 
 		spriteMake = debug_new Sprite("Data/Sprite/Make.png");
 
+		spriteMakeText = debug_new Sprite("Data/SpriteText/CreateText.png");
+
+
 		spriteShop = debug_new Sprite("Data/Sprite/Break.png");
 
 		spriteBack = debug_new Sprite("Data/Sprite/Back.png");
@@ -130,6 +134,8 @@ void CreateMap::Initialize() {
 		spriteDelete = debug_new Sprite("Data/Sprite/RoomBreak.png");
 
 		spriteCoinF = debug_new Sprite("Data/Sprite/CoinFrame.png");
+
+	
 	}
 
 
@@ -184,6 +190,11 @@ void CreateMap::Finalize() {
 		if (spriteMake != nullptr) {
 			delete spriteMake;
 			spriteMake = nullptr;
+		}
+
+		if (spriteMakeText != nullptr) {
+			delete spriteMakeText;
+			spriteMakeText = nullptr;
 		}
 
 		if (spriteFrame != nullptr) {
@@ -534,6 +545,7 @@ void CreateMap::SelectMenu(float elapsedTime) {
 		//カーソルが範囲内の時
 		ShakeAngle(mapBangle, elapsedTime, 100.0f, -10.0f, 10.0f);
 
+		
 
 		if ((gamepad.GetButton() & GamePad::BTN_B && GameState::Instance().controllerState == GameState::Controller) ||
 			(mouse.GetButton() & Mouse::BTN_LEFT && GameState::Instance().controllerState == GameState::ControllerState::MouseAndKeyboard))
@@ -615,6 +627,7 @@ void CreateMap::MenuRender(ID3D11DeviceContext* dc) {
 
 	}
 
+	if (PointUI::Instance().ClickButton(spriteMapBPos.x, spriteMapBPos.y, spriteMapBSize.x, spriteMapBSize.y)){ MessageWindow::Instance().MessageRender(dc, spriteMakeText, spriteMakeTextPos, spriteMakeTextSize, { 0.0f, 1.0f, 1.0f, 1.0f }); }
 
 	//作るボタンを描画
 	//float makeTexHeight = static_cast<float>(spriteMake->GetTextureHeight());

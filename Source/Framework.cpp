@@ -26,7 +26,7 @@ Framework::Framework(HWND hWnd)
 	, input(hWnd)
 	, graphics(hWnd)
 {
-
+	//初期化処理
 	Audio::Instance().Initialize();
 	UIFrame::Instance().Initialize();
 	PointUI::Instance().Initialize();
@@ -34,13 +34,13 @@ Framework::Framework(HWND hWnd)
 	SceneManager::Instance().ChangeScene(new  SceneTitle);
 	GameState::Instance().Initialize();
 	GameState::Instance().controllerState = GameState::ControllerState::MouseAndKeyboard;
-	
+	//GameState::Instance().controllerState = GameState::ControllerState::Controller;
 }
 
 // デストラクタ
 Framework::~Framework()
 {
-
+	//終了処理
 	UIFrame::Instance().Finalize();
 	PointUI::Instance().Finalize();
 
