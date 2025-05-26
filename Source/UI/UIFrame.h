@@ -1,7 +1,6 @@
 #pragma once
 #include "Graphics/Graphics.h"
 #include"Graphics/Sprite.h"
-
 #include "Graphics/Graphics.h"
 #include"Graphics/Sprite.h"
 #include"Chara/Player.h"
@@ -35,7 +34,8 @@ public:
 	int animeState = -1;
 
 private:
-	const float MAX_GEAR_SPEED = 10.0f;
+	const float MAX_GEAR_SPEED = 100.0f;
+	float GearSpeed = 0.0f;
 
 	Sprite* spriteFrame = nullptr;
 	Sprite* spriteGear = nullptr;

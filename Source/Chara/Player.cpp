@@ -66,8 +66,8 @@ Player::Player()
 	maxHealth = 100;
 	health = maxHealth;
 	oldHealth = maxHealth;
-	friction = 0.9f;
-	gravity = -2.0f;
+	friction = 0.7f;
+	gravity = -1.6f;
 	angle = { 0.0f,0.0f,0.0f };
 	isDead = false;
 	coin = 10;
@@ -149,7 +149,7 @@ void Player::Update(float elapsedTime)
 
 	//ステート枚の処理
 
-	if (GameState::Instance().currentState == GameState::State::Game) {
+	if (GameState::Instance().GetState() == GameState::State::Game) {
 
 		switch (state)
 		{
@@ -314,11 +314,6 @@ void Player::UIRender(ID3D11DeviceContext* dc) {
 			}
 			ImGui::End();
 
-
-
-
-
-
 			//プレイヤーHPバーUI描画
 			spriteHPBar->Render(dc, HPBarPosition.x, HPBarPosition.y, backBarWidth * HPRate1, BarHeight, 0, 0, PHPtextureBarWidth * HPRate1, PHPtextureBarHeight, 0, 1.0f, 1.0f, 1.0f, 1);
 			spriteHPBar->Render(dc, HPBarPosition.x, HPBarPosition.y, BarWidth * HPRate, BarHeight, 0, 0, PHPtextureBarWidth * HPRate, PHPtextureBarHeight, 0, HPColor.x, HPColor.y, HPColor.z, HPColor.w);
@@ -389,10 +384,6 @@ void Player::UIRender(ID3D11DeviceContext* dc) {
 		default:
 			break;
 		}
-
-
-
-
 
 		float ItemFrameWidth = static_cast<float>(spriteItemFrame->GetTextureWidth());
 		float ItemFrameHeight = static_cast<float>(spriteItemFrame->GetTextureHeight());
@@ -640,14 +631,14 @@ bool Player::InputMove(float elapsedTime) {
 //攻撃入力処理
 bool Player::InputAttack()
 {
-	if (GameState::Instance().controllerState == GameState::ControllerState::Controller)
+	if (GameState::Instance().GetControllerState() == GameState::ControllerState::Controller)
 	{
 		GamePad& gamePad = Input::Instance().GetGamePad();
 		if (gamePad.GetButtonDown() & GamePad::BTN_X) {
 			return true;
 		}
 	}
-	else if (GameState::Instance().controllerState == GameState::ControllerState::MouseAndKeyboard)
+	else if (GameState::Instance().GetControllerState() == GameState::ControllerState::MouseAndKeyboard)
 	{
 		Mouse& mouse = Input::Instance().GetMouse();
 		if (mouse.GetButtonDown() & Mouse::BTN_LEFT) {
@@ -682,7 +673,7 @@ bool Player::InputJump() {
 
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
-	if (GameState::Instance().controllerState == GameState::ControllerState::Controller)
+	if (GameState::Instance().GetControllerState() == GameState::ControllerState::Controller)
 	{
 		if (gamePad.GetButtonDown() & GamePad::BTN_B) {
 			//ジャンプ回数制限
@@ -695,7 +686,7 @@ bool Player::InputJump() {
 			}
 		}
 	}
-	else if (GameState::Instance().controllerState == GameState::ControllerState::MouseAndKeyboard)
+	else if (GameState::Instance().GetControllerState() == GameState::ControllerState::MouseAndKeyboard)
 	{
 		if (GetAsyncKeyState(VK_SPACE) & 1) {
 			//ジャンプ回数制限
@@ -797,7 +788,7 @@ void Player::InputProjectile()
 
 //アイテム使用入力処理
 void Player::InputUseItem() {
-	if (GameState::Instance().currentState == GameState::State::Game) {
+	if (GameState::Instance().GetState() == GameState::State::Game) {
 		UseItem();
 		SelectItem();
 	}
@@ -807,7 +798,7 @@ void Player::InputUseItem() {
 //アイテム使用処理
 void Player::UseItem() {
 
-	if (GameState::Instance().controllerState == GameState::ControllerState::Controller)
+	if (GameState::Instance().GetControllerState() == GameState::ControllerState::Controller)
 	{
 		GamePad& gamepad = Input::Instance().GetGamePad();
 		//アイテム使用処理
@@ -842,7 +833,7 @@ void Player::UseItem() {
 		}
 	
 	}
-	else if (GameState::Instance().controllerState == GameState::ControllerState::MouseAndKeyboard)
+	else if (GameState::Instance().GetControllerState() == GameState::ControllerState::MouseAndKeyboard)
 
 	{
 		Mouse& mouse = Input::Instance().GetMouse();
@@ -880,7 +871,7 @@ void Player::UseItem() {
 //アイテム選択処理
 void Player::SelectItem() {
 	//アイテム選択
-	if (GameState::Instance().controllerState == GameState::ControllerState::Controller)//pad
+	if (GameState::Instance().GetControllerState() == GameState::ControllerState::Controller)//pad
 	{
 		GamePad& gamepad = Input::Instance().GetGamePad();
 		if (gamepad.GetButtonDown() & GamePad::BTN_LEFT_SHOULDER) {
@@ -896,7 +887,7 @@ void Player::SelectItem() {
 			}
 		}
 	}
-	else if (GameState::Instance().controllerState == GameState::ControllerState::MouseAndKeyboard)
+	else if (GameState::Instance().GetControllerState() == GameState::ControllerState::MouseAndKeyboard)
 	{
 		if (GetAsyncKeyState('Q') & 1) {
 			itemNum--;

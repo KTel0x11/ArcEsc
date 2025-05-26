@@ -26,16 +26,13 @@ void PointUI::Finalize() {
 //カーソル更新
 void PointUI::Update(float elapsedTime) {
 
-	
-
-
-	if (GameState::Instance().controllerState==GameState::ControllerState::Controller) {
+	if (GameState::Instance().GetControllerState()  == GameState::ControllerState::Controller) {
 		//カーソル移動処理
 		PointPos.y -= gamePad.GetAxisLY() * elapsedTime * moveSpeed;
 		PointPos.x += gamePad.GetAxisLX() * elapsedTime * moveSpeed;
 	}
 
-	if (GameState::Instance().controllerState == GameState::ControllerState::MouseAndKeyboard) {
+	if (GameState::Instance().GetControllerState() == GameState::ControllerState::MouseAndKeyboard) {
 		PointPos.x = mouse.GetPositionX();
 		PointPos.y = mouse.GetPositionY();
 	}

@@ -90,7 +90,6 @@ bool StageTree::RayCast(const DirectX::XMFLOAT3& start, const DirectX::XMFLOAT3&
 		DirectX::XMStoreFloat3(&hit.normal, DirectX::XMVector3Normalize(WorldNormal));
 		DirectX::XMStoreFloat(&hit.distance, Dist);
 		hit.materialIndex = localHit.materialIndex;
-		HitPosition = localHit.position;
 
 		return true;
 	}

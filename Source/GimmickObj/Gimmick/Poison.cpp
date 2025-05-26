@@ -76,7 +76,7 @@ void Poison::DrawDebugGUI() {
 bool Poison::RayCast(const DirectX::XMFLOAT3& start, const DirectX::XMFLOAT3& end, HitResult& hit) {
 	if (model != nullptr) {
 		if (Collision::IntersectRayVsModel(start, end, model, hit)) {
-			Player::Instance().OnPoison = true;
+			if(Player::Instance().IsGround())Player::Instance().OnPoison = true;
 			return true;
 		}
 		else {

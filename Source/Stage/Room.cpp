@@ -40,19 +40,31 @@ void Room::MapRender(ID3D11DeviceContext* dc) {
 		color = { 0,0,0,1 };
 	}
 
-	spriteRoom->Render(dc, map.spritePos.x + map.blockInterval * axis.x, map.spritePos.y + map.blockInterval * axis.y, map.spriteSize.x, map.spriteSize.y, 128 * static_cast<int>(roomType), 0, 128, 128, 90 * angleType, color.x, color.y, color.z, color.w);
+	spriteRoom->Render(dc,
+		map.spritePos.x + map.blockInterval * axis.x, map.spritePos.y + map.blockInterval * axis.y,map.spriteSize.x, map.spriteSize.y,
+		128 * static_cast<int>(roomType), 0, 128, 128,
+		90 * angleType,
+		color.x, color.y, color.z, color.w);
 
 }
 
 
 void Room::BulePrintRender(ID3D11DeviceContext* dc,int Y_axis) {
 
-	spriteRoom->Render(dc, bulePrint.spritePos.x, bulePrint.spritePos.y + bulePrint.blockInterval * Y_axis, bulePrint.spriteSize.x, bulePrint.spriteSize.y, 128 * static_cast<int>(roomType), 0, 128, 128, 0, color.x,color.y,color.z,color.w);
+	spriteRoom->Render(dc,
+		bulePrint.spritePos.x, bulePrint.spritePos.y + bulePrint.blockInterval * Y_axis, bulePrint.spriteSize.x, bulePrint.spriteSize.y,
+		128 * static_cast<int>(roomType), 0, 128, 128,
+		0,
+		color.x,color.y,color.z,color.w);
 
 }
 
 void Room::SelectRender(ID3D11DeviceContext* dc, DirectX::XMFLOAT3 Pos) {
 
-	spriteRoom->Render(dc, Pos.x - 20,Pos.y - 20 , 40, 40, 128 * static_cast<int>(roomType), 0, 128, 128, 90 * angleType, color.x, color.y, color.z, color.w);
+	spriteRoom->Render(dc,
+		Pos.x - bulePrint.spriteSize.x / 2,Pos.y - bulePrint.spriteSize.y / 2,bulePrint.spriteSize.x, bulePrint.spriteSize.y,
+		128 * static_cast<int>(roomType), 0, 128, 128,
+		90 * angleType,
+		color.x, color.y, color.z, color.w);
 
 }

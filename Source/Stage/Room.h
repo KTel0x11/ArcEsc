@@ -59,15 +59,15 @@ public:
 	Sprite* spriteRoom = nullptr;
 	DirectX::XMFLOAT4 color = {1,1,1,1};
 
-private:
-
-
 	SpriteInfo map{
 		{350.0f, 90.0f },
 		{100.0f,100.0f},
 		106.0f,
-
 	};
+
+private:
+
+
 
 	SpriteInfo bulePrint{
 	{140.0f, 140.0f },

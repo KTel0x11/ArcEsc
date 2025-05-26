@@ -33,8 +33,8 @@ Framework::Framework(HWND hWnd)
 	EffectManager::Instance().Initialize();
 	SceneManager::Instance().ChangeScene(new  SceneTitle);
 	GameState::Instance().Initialize();
-	GameState::Instance().controllerState = GameState::ControllerState::MouseAndKeyboard;
-	//GameState::Instance().controllerState = GameState::ControllerState::Controller;
+	GameState::Instance().SetControllerState(GameState::ControllerState::MouseAndKeyboard);
+	//GameState::Instance().SetControllerState(GameState::ControllerState::Controller);
 }
 
 // デストラクタ

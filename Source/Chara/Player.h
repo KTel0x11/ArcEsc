@@ -313,7 +313,7 @@ private:
 	DirectX::XMINT3 axis = { 0,0,0 };
 
 	float moveSpeed = 20.0f;
-	float turnSpeed = DirectX::XMConvertToRadians(360);
+	float turnSpeed = DirectX::XMConvertToRadians(720);
 	float attackSpeed = 50.0f;
 
 	float jumpSpeed = 45.0f;

@@ -32,8 +32,8 @@ void MessageWindow::MessageRender(ID3D11DeviceContext* dc, Sprite* message, Dire
 	//if(size.x >= uvFrameSize.x && size.y >= uvFrameSize.y)
 	{
 		//¶ã‚©‚ç‰E‰º‚Ü‚Å
-		winPos.x = position.x ;
-		winPos.y = position.y ;
+		winPos.x = position.x - uvFrameSize.x * 0.2f;
+		winPos.y = position.y - uvFrameSize.y * 0.2f; 
 
 		//”wŒi•`‰æ
 		spriteFrame->Render(dc,
@@ -44,7 +44,7 @@ void MessageWindow::MessageRender(ID3D11DeviceContext* dc, Sprite* message, Dire
 		);
 
 		message->Render(dc,
-			position.x, position.y, size.x + uvFrameSize.x * 2, size.y + uvFrameSize.y * 2,//position
+			position.x , position.y, size.x  + uvFrameSize.x * 1.5f, size.y  +  uvFrameSize.y * 1.5f,//position
 			0, 0, static_cast<float>(message->GetTextureWidth()), static_cast<float>(message->GetTextureHeight()),//uv
 			0.0f,//angle
 			1.0f, 1.0f, 1.0f, 1.0f//color

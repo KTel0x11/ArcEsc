@@ -38,7 +38,7 @@ void SeesawFloor::Update(float elapsedTime) {
 	UpdateTransform();
 
 	
-	if (GameState::Instance().currentState == GameState::State::Game) {
+	if (GameState::Instance().GetState() == GameState::State::Game) {
 
 		// シーソーの傾き更新
 		if (hitFlg) { // プレイヤーが乗っている場合
@@ -96,6 +96,7 @@ bool SeesawFloor::RayCast(const DirectX::XMFLOAT3& start, const DirectX::XMFLOAT
 	DirectX::XMVECTOR LocalStart = DirectX::XMVector3TransformCoord(WorldStart, InverseWorldTransform);
 	DirectX::XMVECTOR LocalEnd = DirectX::XMVector3TransformCoord(WorldEnd, InverseWorldTransform);
 
+	//前回のローカル空間でのレイを求める
 	DirectX::XMFLOAT3 localStart, localEnd;
 	DirectX::XMStoreFloat3(&localStart, LocalStart);
 	DirectX::XMStoreFloat3(&localEnd, LocalEnd);
@@ -146,6 +147,8 @@ bool SeesawFloor::SphereCast(const DirectX::XMFLOAT3& start, const float radius,
 
 //行列更新処理
 void SeesawFloor::UpdateTransform() {
+
+	// ワールド行列の更新
 	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z);
 	DirectX::XMMATRIX R = DirectX::XMMatrixRotationRollPitchYaw(angle.x, angle.y, angle.z);
 	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
@@ -159,7 +162,7 @@ void SeesawFloor::UpdateTransform() {
 }
 
 
-
+//デバッグ用の描画
 void SeesawFloor::DrawDebugGUI()
 {
 	ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);
@@ -182,10 +185,10 @@ void SeesawFloor::DrawDebugGUI()
 		}
 	}
 
-
 	ImGui::End();
 }
 
+//デバッグ用の描画
 void SeesawFloor::DrawDebugPrimitive() {
 	Graphics::Instance().GetDebugRenderer()->DrawBox(position, scale, { 0,0,0,1 }, angle);
 }

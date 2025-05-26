@@ -17,8 +17,8 @@ struct Gimmick
 
 static Gimmick moveFloor[] =
 {
-	{ DirectX::XMFLOAT3(1.0, 0, 0), DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0, 0, 0) },
-	{ DirectX::XMFLOAT3(-1.0, 0, 0), DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0, 0, 0) },
+	{ DirectX::XMFLOAT3(1.2, 0, 0), DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0, 0, 0) },
+	{ DirectX::XMFLOAT3(-1.2, 0, 0), DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0, 0, 0) },
 	{ DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0, 0, 0) },
 };
 
@@ -26,13 +26,15 @@ static Gimmick moveFloor[] =
 
 StageFall::StageFall() {
 
+	//初期化
 	scale = { 50.0f,50.0f,50.0f };
-
 	model = new Model("Data/Model/StageModel/Room/DungeonFall.mdl");
+
 }
 
 StageFall::~StageFall() {
 
+	//モデルの破棄
 	if (model != nullptr) {
 		delete model;
 	}
@@ -40,8 +42,10 @@ StageFall::~StageFall() {
 }
 
 void StageFall::Update(float elapsedTime) {
+	//前回の情報を保存
 	UpdateTransform();
 
+	//行列更新
 	if(!OnFloor)
 	{
 
@@ -88,7 +92,7 @@ void StageFall::Update(float elapsedTime) {
 }
 
 void StageFall::Render(ID3D11DeviceContext* dc, Shader* shader) {
-
+	
 	if (model != nullptr) {
 		shader->Draw(dc, model);
 	}
@@ -97,10 +101,11 @@ void StageFall::Render(ID3D11DeviceContext* dc, Shader* shader) {
 }
 
 bool StageFall::RayCast(const DirectX::XMFLOAT3& start, const DirectX::XMFLOAT3& end, HitResult& hit) {
+
+	//前回のワールド行列と逆行列を求める
 	if (model != nullptr) {
 		if (Collision::IntersectRayVsModel(start, end, model, hit)) {
 			Player::Instance().SetAxis(axis);
-
 			return true;
 		}
 		else {
@@ -125,6 +130,7 @@ bool StageFall::SphereCast(const DirectX::XMFLOAT3& start, const float radius, c
 
 //行列更新処理
 void StageFall::UpdateTransform() {
+	// ワールド行列の更新
 	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z);
 	DirectX::XMMATRIX R = DirectX::XMMatrixRotationRollPitchYaw(angle.x, angle.y, angle.z);
 	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
@@ -132,6 +138,7 @@ void StageFall::UpdateTransform() {
 	DirectX::XMStoreFloat4x4(&transform, W);
 
 
+	//行列更新
 	if (model != nullptr) {
 		model->UpdateTransform(transform);
 	}
@@ -139,6 +146,7 @@ void StageFall::UpdateTransform() {
 }
 
 void StageFall::DrawDebugGUI() {
+
 
 	ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_FirstUseEver);

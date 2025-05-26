@@ -1,4 +1,5 @@
 #include "Graphics/Graphics.h"
+#include"Graphics/DepthStencil.h"
 #include "Input/Input.h"
 #include "SceneGame.h"
 #include "SceneTitle.h"
@@ -182,7 +183,7 @@ void SceneGame::Update(float elapsedTime)
 
 	UIFrame::Instance().Update(elapsedTime);
 
-	switch (GameState::Instance().currentState)
+	switch (GameState::Instance().GetState())
 	{
 	case GameState::State::Start: 
 	{
@@ -428,7 +429,7 @@ void SceneGame::Render()
 	shader->Begin(dc, rc);
 
 	//ステート遷移
-	switch (GameState::Instance().currentState)
+	switch (GameState::Instance().GetState())
 	{
 
 	/***********************************ゲーム中の描画*************************/
@@ -436,14 +437,16 @@ void SceneGame::Render()
 	{
 		// 3Dモデル描画
 		{
+			//プレイヤー描画
+			player->Render(dc, shader);
+			
 			//ステージ描画
 			StageManager::Instance().Render(dc, shader);
 
+
 			//ギミック描画
 			GimmickManager::Instance().Render(dc, shader);
-
-			//プレイヤー描画
-			player->Render(dc, shader);
+		
 
 
 			//エネミー描画
@@ -451,6 +454,8 @@ void SceneGame::Render()
 
 			//エフェクト描画
 			EffectManager::Instance().Render(rc.view, rc.projection);
+
+
 			
 		}
 		shader->End(dc);
@@ -742,6 +747,8 @@ void SceneGame::Render()
 		// デバッグレンダラ描画実行
 		graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
 	}
+
+	DepthStencil::Instance().clear();
 
 	//デバックプリミティブ描画
 	{

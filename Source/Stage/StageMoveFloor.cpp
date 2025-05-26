@@ -1,5 +1,7 @@
 #include<imgui.h>
 #include "StageMoveFloor.h"
+#include "Chara/Player.h"
+#include"Chara/Character.h"
 #include"GameState.h"
 #define debug_new new(_NORMAL_BLOCK,__FILE__,__LINE__)
 
@@ -10,7 +12,7 @@ StageMoveFloor::StageMoveFloor() {
 	scale.x = scale.z = 40.0f;
 	scale.y = 5.0f;
 	//ステージモデルを読み込み
-	model = new Model("Data/Model/Cube/SandCube.mdl");
+	model = new Model("Data/Model/Cube/Cube.mdl");
 }
 
 
@@ -40,7 +42,7 @@ void StageMoveFloor::Update(float elapsedTime) {
 	float length;
 	DirectX::XMStoreFloat(&length, Length);
 
-	if (GameState::Instance().currentState == GameState::State::Game) {
+	if (GameState::Instance().GetState() == GameState::State::Game) {
 
 		//スタートからゴールまでの間を一秒間で進む割合(0.0~1.0)を算出する
 		float speed = moveSpeed * elapsedTime;
@@ -64,12 +66,14 @@ void StageMoveFloor::Update(float elapsedTime) {
 		angle.z += torque.z * elapsedTime;
 
 	}
+
 	//行列更新
 	UpdateTransform();
 
 	//レイキャスト用にモデル空間行列にするため単位行列を渡す
 	const DirectX::XMFLOAT4X4 transformIdentity = { 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 };
 	model->UpdateTransform(transformIdentity);
+
 
 }
 
@@ -115,7 +119,10 @@ bool StageMoveFloor::RayCast(const DirectX::XMFLOAT3& start, const DirectX::XMFL
 		DirectX::XMStoreFloat3(&hit.normal, DirectX::XMVector3Normalize(WorldNormal));
 		DirectX::XMStoreFloat(&hit.distance, Dist);
 		hit.materialIndex = localHit.materialIndex;
-		HitPosition = localHit.position;
+	
+		DirectX::XMStoreFloat3(&hit.position,WorldPosition);
+	
+
 
 		//回転差分を算出
 		hit.rotation.x = angle.x - oldAngle.x;

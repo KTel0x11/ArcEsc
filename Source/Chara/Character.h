@@ -59,6 +59,8 @@ public:
 
 	bool GetDead() { return isDead; }
 
+	void Move(float vx, float vz, float speed);
+
 private:
 
 	//垂直速力更新処理
@@ -77,7 +79,7 @@ private:
 
 protected:
 
-	void Move(float vx, float vz, float speed);
+
 
 	//ジャンプ処理
 	void Jump(float speed);

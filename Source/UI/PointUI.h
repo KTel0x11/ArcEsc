@@ -34,7 +34,10 @@ public:
 	//当たり判定カーソル
 	bool ClickButton(float posX, float posY, float width, float height);
 
+
+	void SetPointPos(float x, float y) { PointPos.x = x; PointPos.y = y; }
 	DirectX::XMFLOAT3& GetPoint() { return PointPos; }
+
 
 
 	//コントローラ取得
