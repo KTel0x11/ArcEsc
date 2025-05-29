@@ -66,8 +66,11 @@ private:
 	Sprite* gauge = nullptr;
 	Sprite* spriteEnemyHP = nullptr;
 	Sprite* spriteEHPBar = nullptr;
-	Sprite* spritePauseButton = nullptr;
+	Sprite* spritePauseButtonPad = nullptr;
+	Sprite* spritePauseButtonKM = nullptr;
 	Sprite* spriteGuide = nullptr;
+
+
 
 	Sprite* spriteClear= nullptr;
 	DirectX::XMFLOAT2 ClearPos = { 0,0 };

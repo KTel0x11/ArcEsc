@@ -28,6 +28,12 @@ public:
 	//更新処理
 	void Update(float elapsedTime);
 
+	//マウスカーソルの更新
+	void MoveMouseUpdate(float elapsedTime);
+
+	//ゲームパッドカーソルの更新
+	void MovePadUpdate(float elapsedTime);
+
 	//描画処理
 	void Render(Graphics& graphics, ID3D11DeviceContext* dc);
 

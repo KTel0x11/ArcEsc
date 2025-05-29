@@ -18,6 +18,6 @@ public:
 	}
 
 
-	bool ButtonUp(DirectX::XMFLOAT2 pos, DirectX::XMFLOAT2 size, DirectX::XMFLOAT4& color, bool colorChange);
+	bool ButtonUp(DirectX::XMFLOAT2 pos, DirectX::XMFLOAT2& size, DirectX::XMFLOAT4& color, bool colorChange, bool sizeChange, const DirectX::XMFLOAT2 changeSize = {0,0}, const DirectX::XMFLOAT2 oldSize = {0,0});
 	bool ButtonDown(DirectX::XMFLOAT2 pos, DirectX::XMFLOAT2 size);
 };

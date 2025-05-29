@@ -5,8 +5,7 @@
 
  
 void UIFrame::Initialize() {
-	
-	
+	//spriteの初期化
 	spriteFrame = new Sprite("Data/Sprite/GameFrame.png");
 	spriteGear = new Sprite("Data/Sprite/Gear.png");
 	spriteGear1 = new Sprite("Data/Sprite/Gear1.png");
@@ -15,7 +14,7 @@ void UIFrame::Initialize() {
 }
 
 void UIFrame::Finalize() {
-
+	//spriteの終了化
 	if (spriteGear1 != nullptr) {
 		delete spriteGear1;
 		spriteGear1 = nullptr;
@@ -37,56 +36,11 @@ void UIFrame::Finalize() {
 
 //フレーム更新
 void UIFrame::Update(float elapsedTime) {
-
-	DamageAnimation(elapsedTime);
+	
+	
 
 	if (GameState::Instance().GetSceneState() == GameState::SceneState::SceneGame) {
-		if(Player::Instance().OnPoison){
-			GearSpeed = 0.0f;
-			GearColor = { 0.5f,0.0f,0.5f,1 };
-		
-		}
-		else if (Player::Instance().isDamaged) {
-			GearSpeed = 0.0f;
-			GearColor = { 1,0.5f,0.5f,1 };
-		}
-		else {
-
-			GearColor = { 1,1,1,1 };
-
-			if (GearSpeed > MAX_GEAR_SPEED)
-			{
-				GearSpeed = MAX_GEAR_SPEED;
-			}
-			else
-			{
-				GearSpeed += 10.0f * elapsedTime;
-			} 
-
-			
-
-			//速度を計算
-			ToggleSpeed =  GearSpeed * (Player::Instance().GetHealth() / Player::Instance().GetMaxHealth());
-			
-
-			if (GameState::Instance().GetState() != GameState::GameOver) {
-				//回転
-				GearAng += ToggleSpeed * elapsedTime;
-			}
-		}
-		
-
-
-
-
-		//歯車が一回転したら
-		if (GearAng > 360.0f) {
-			GearAng -= GearAng;//回転位置リセット
-			gearNum++;//回転数を増やす
-
-		}
-
-	
+		GameUpdate(elapsedTime);
 	}
 	else {
 		ToggleSpeed = 50.0f;
@@ -124,6 +78,59 @@ void UIFrame::Render(Graphics& graphics,ID3D11DeviceContext* dc) {
 
 }
 
+void UIFrame::GameUpdate(float elapsedTime) {
+
+	//damageアニメーションの更新
+	DamageAnimation(elapsedTime);
+
+
+	if (Player::Instance().OnPoison) {
+		GearSpeed = 0.0f;
+		GearColor = { 0.5f,0.0f,0.5f,1 };
+
+	}
+
+	else if (Player::Instance().isDamaged) {
+		GearSpeed = 0.0f;
+		GearColor = { 1,0.5f,0.5f,1 };
+	}
+
+	else {
+		
+		//色の初期化
+		GearColor = { 1,1,1,1 };
+
+		//歯車の回転速度を計算
+		if (GearSpeed > MAX_GEAR_SPEED)
+		{
+			GearSpeed = MAX_GEAR_SPEED;
+		}
+		else
+		{
+			GearSpeed += 10.0f * elapsedTime;
+		}
+
+		//速度を計算
+		ToggleSpeed = GearSpeed * (Player::Instance().GetHealth() / Player::Instance().GetMaxHealth());
+
+
+		if (GameState::Instance().GetState() != GameState::GameOver) {
+			//回転
+			GearAng += ToggleSpeed * elapsedTime;
+		}
+	}
+	//歯車が一回転したら
+	if (GearAng > 360.0f) {
+		GearAng -= GearAng;//回転位置リセット
+		gearNum++;//回転数を増やす
+
+	}
+
+
+}
+
+
+
 //ダメージアニメーション
 void UIFrame::DamageAnimation(float elapsedTime) {
 
@@ -136,49 +143,58 @@ void UIFrame::DamageAnimation(float elapsedTime) {
 		break;
 	case 1://ダメージアニメーション
 
-		GearPos.x -= 500.0f * elapsedTime;
-		GearPos.y -= 500.0f * elapsedTime;
-		Gear1Pos.x += 500.0f * elapsedTime;
-		Gear1Pos.y += 500.0f * elapsedTime;
+		//左上に移動
+		GearPos.x += DMAGE_GEAR_SPEED * elapsedTime;
+		GearPos.y += DMAGE_GEAR_SPEED * elapsedTime;
+		//右下に移動
+		Gear1Pos.x -= DMAGE_GEAR_SPEED * elapsedTime;
+		Gear1Pos.y -= DMAGE_GEAR_SPEED * elapsedTime;
 
-		if (GearPos.x < 1090.0f) {
-			GearPos.x = 1090.0f;
+		//一定を超えたら止まる
+		if (GearPos.x > 1150.0f) {
+			GearPos.x = 1150.0f;
 		}
-		if (GearPos.y < 520.0f) {
-			GearPos.y = 520.0f;
+		if (GearPos.y > 580.0f) {
+			GearPos.y = 580.0f;
 		}
-		if (Gear1Pos.x > -20.0f) {
-			Gear1Pos.x = -20.0f;
+		if (Gear1Pos.x < -80.0f) {
+			Gear1Pos.x = -80.0f;
 		}
-		if (Gear1Pos.y > -10.0f) {
-			Gear1Pos.y = -10.0f;
+		if (Gear1Pos.y < -70.0f) {
+			Gear1Pos.y = -70.0f;
 		}
 
-
-		if (GearPos.x >= 1090.0f||Gear1Pos.x >= -20.0f) {
+		//条件を満たしたら次のアニメーションへ
+		if (GearPos.x >= 1150.0f||Gear1Pos.x <= -80.0f) {
 			animeState++;
 		}
 		break;
 
 	case 2://ダメージアニメーション
-		GearPos.x += 500.0f * elapsedTime;
-		GearPos.y += 500.0f * elapsedTime;
-		Gear1Pos.x -= 500.0f * elapsedTime;
-		Gear1Pos.y -= 500.0f * elapsedTime;
-		if (GearPos.x > 1120.0f) {
+		//左上に移動
+		GearPos.x -= DMAGE_GEAR_SPEED * elapsedTime;
+		GearPos.y -= DMAGE_GEAR_SPEED * elapsedTime;
+
+		//右下に移動
+		Gear1Pos.x += DMAGE_GEAR_SPEED * elapsedTime;
+		Gear1Pos.y += DMAGE_GEAR_SPEED * elapsedTime;
+
+		//一定を超えたら止まる
+		if (GearPos.x < 1120.0f) {
 			GearPos.x = 1120.0f;
 		}
-		if (GearPos.y > 550.0f) {
+		if (GearPos.y < 550.0f) {
 			GearPos.y = 550.0f;
 		}
-		if (Gear1Pos.x < -50.0f) {
+		if (Gear1Pos.x > -50.0f) {
 			Gear1Pos.x = -50.0f;
 		}
-		if (Gear1Pos.y < -40.0f) {
+		if (Gear1Pos.y > -40.0f) {
 			Gear1Pos.y = -40.0f;
 		}
-		//一定を超えたら止まる
-		if (GearPos.x >= 1120.0f && Gear1Pos.x <= -50.0f) {
+
+		//条件を満たしたら次のアニメーションへ
+		if (GearPos.x <= 1120.0f && Gear1Pos.x >= -50.0f) {
 			GearPos.x = 1120.0f;
 			Gear1Pos.x = -50.0f;
 			animeState++;

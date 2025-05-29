@@ -28,15 +28,26 @@ void PointUI::Update(float elapsedTime) {
 
 	if (GameState::Instance().GetControllerState()  == GameState::ControllerState::Controller) {
 		//カーソル移動処理
-		PointPos.y -= gamePad.GetAxisLY() * elapsedTime * moveSpeed;
-		PointPos.x += gamePad.GetAxisLX() * elapsedTime * moveSpeed;
+		MovePadUpdate(elapsedTime);
 	}
 
 	if (GameState::Instance().GetControllerState() == GameState::ControllerState::MouseAndKeyboard) {
-		PointPos.x = mouse.GetPositionX();
-		PointPos.y = mouse.GetPositionY();
+		MoveMouseUpdate(elapsedTime);
 	}
 
+}
+
+//マウスカーソルの更新
+void PointUI::MoveMouseUpdate(float elapsedTime) {
+	//マウスカーソルの位置を更新
+	PointPos.x = mouse.GetPositionX();
+	PointPos.y = mouse.GetPositionY();
+}
+//ゲームパッドカーソルの更新
+void PointUI::MovePadUpdate(float elapsedTime) {
+	//ゲームパッドカーソルの位置を更新
+	PointPos.y -= gamePad.GetAxisLY() * elapsedTime * moveSpeed;
+	PointPos.x += gamePad.GetAxisLX() * elapsedTime * moveSpeed;
 }
 
 //カーソル描画

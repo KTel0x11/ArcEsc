@@ -117,6 +117,8 @@ const int Axis_MAX = 5;
 	 //スプライトを揺らす処理
 	 void ShakeAngle(float& angle, float elapsedTime, float speed, float start, float end);
 
+	  bool ChangeButtonSize(Sprite* sprite, DirectX::XMFLOAT2& pos, DirectX::XMFLOAT2& size, DirectX::XMFLOAT2 cangeSize);
+
 
 	 //スタート、ゴール、鍵の部屋が重ならないようにする処理
 	 bool isAdjacent(const 	DirectX::XMINT3& a, const	DirectX::XMINT3& b) {
@@ -165,12 +167,31 @@ const int Axis_MAX = 5;
 	 DirectX::XMFLOAT2 spriteDrawerPos = { 0,0 };
 	 DirectX::XMFLOAT2 spriteDrawerSize = { 900,550 };
 
+
+
+
+
 	 //地図(メニュー用ボタン)のスプライト関係
 	 Sprite* spriteMapB = nullptr;
 	 DirectX::XMFLOAT2 spriteMapBPos = { 550,200 };
 	 DirectX::XMFLOAT2 spriteMapBSize = { 160,160 };
 	 DirectX::XMFLOAT4 MapBColor = { 1,1,1,1 };
 	 float mapBangle = 0;
+	 //説明文のスプライト関係
+	 Sprite* spriteMakeText = nullptr;
+	 DirectX::XMFLOAT2 spriteMakeTextPos = { 50,300 };
+	 DirectX::XMFLOAT2 spriteMakeTextSize = { 200,25 };
+
+	 //ショップ(メニュー用ボタン)のスプライト関係
+	 Sprite* spriteShopB = nullptr;
+	 DirectX::XMFLOAT2 spriteShopBPos = { 430,200 };
+	 DirectX::XMFLOAT2 spriteShopBSize = { 160,160 };
+	 DirectX::XMFLOAT4 ShopBColor = { 1,1,1,1 };
+	 float shopBangle = 0;
+	 //説明文のスプライト関係
+	 Sprite* spriteShopText = nullptr;
+	 DirectX::XMFLOAT2 spriteShopTextPos = { 50,300 };
+	 DirectX::XMFLOAT2 spriteShopTextSize = { 200,25 };
 
 
 
@@ -179,26 +200,34 @@ const int Axis_MAX = 5;
 	 DirectX::XMFLOAT2 spriteMapPos = { 270,15 };
 	 float spriteMapSize = 680.0f;
 
+	 //メニューのスプライト関係
+	 Sprite* spriteMenu = nullptr;
+	 DirectX::XMFLOAT2 spriteMenuPos = { 50,70 };
+	 DirectX::XMFLOAT2 spriteMenuSize = { 120,20 };
+	 DirectX::XMFLOAT4 MenuColor = { 1,1,1,1 };
+
 	 //作成スプライト関係
 	 Sprite* spriteMake = nullptr;
 	 DirectX::XMFLOAT2 spriteMakePos = { 1800,50 };
 	 DirectX::XMFLOAT2 spriteMakeSize = { 200,100 };
 	 DirectX::XMFLOAT4 MakeColor = { 1,1,1,1 };
 
-	 Sprite* spriteMakeText = nullptr;
-	 DirectX::XMFLOAT2 spriteMakeTextPos = { 750,200 };
-	 DirectX::XMFLOAT2 spriteMakeTextSize = { 200,25 };
+	
 
 	 //ショップスプライト関係
 	 Sprite* spriteShop = nullptr;
 	 DirectX::XMFLOAT2 spriteShopPos = { 1900, 200 };
 	 DirectX::XMFLOAT2 spriteShopSize = { 200,100 };
 	 DirectX::XMFLOAT4 ShopColor = { 1,1,1,1 };
+
+
 	 //戻るスプライト関係
 	 Sprite* spriteBack = nullptr;
 	 DirectX::XMFLOAT2 spriteBackPos = { 1000, 500 };
 	 DirectX::XMFLOAT2 spriteBackSize = { 150,75 };
 	 DirectX::XMFLOAT4 BackColor = { 1,1,1,1 };
+
+
 	 //枠スプライト関係
 	 Sprite* spriteFrame = nullptr;
 	 DirectX::XMFLOAT2 spriteFramePos = { 347, 87 };
@@ -291,6 +320,7 @@ const int Axis_MAX = 5;
 
 	 Room* selectRoom;	//選んだ設計図の情報
 	 int selectNo = 0;
+	 bool selectFlag = false;	//設計図選択フラグ
 
 
 	 Room* haveRoom[4];	//持っている設計図の情報

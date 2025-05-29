@@ -99,17 +99,23 @@ void CreateMap::Initialize() {
 	//スプライト情報
 	spriteDrawer = debug_new Sprite("Data/Sprite/Drawer.png");
 
+	spriteMenu = debug_new Sprite("Data/SpriteText/Menu.png");
+
 	spriteMapB = debug_new Sprite("Data/Sprite/MapButton.png");
+
+	spriteShopB = debug_new Sprite("Data/Sprite/ShopButton.png");
+
+	spriteShopText = debug_new Sprite("Data/SpriteText/ShopExp.png");
 
 	spriteSmoke = debug_new Sprite("Data/Sprite/Smoke.png");
 
 	spriteMap = debug_new Sprite("Data/Sprite/Map.png");
 
-	spriteMake = debug_new Sprite("Data/Sprite/Make.png");
+	spriteMake = debug_new Sprite("Data/SpriteText/Make.png");
 
-	spriteMakeText = debug_new Sprite("Data/SpriteText/CreateText.png");
+	spriteMakeText = debug_new Sprite("Data/SpriteText/MakeExp.png");
 
-	spriteShop = debug_new Sprite("Data/Sprite/Break.png");
+	spriteShop = debug_new Sprite("Data/SpriteText/Shop.png");
 
 	spriteBack = debug_new Sprite("Data/Sprite/Back.png");
 
@@ -138,6 +144,11 @@ void CreateMap::Finalize() {
 
 
 	//スプライト情報終了化
+
+	if (spriteMenu != nullptr) {
+		delete spriteMenu;
+		spriteMenu = nullptr;
+	}
 
 	if (spriteCoinF != nullptr) {
 		delete spriteCoinF;
@@ -220,6 +231,16 @@ void CreateMap::Finalize() {
 	if (spriteMapB != nullptr) {
 		delete spriteMapB;
 		spriteMapB = nullptr;
+	}
+
+	if (spriteShopB != nullptr) {
+		delete spriteShopB;
+		spriteShopB = nullptr;
+	}
+
+	if (spriteShopText != nullptr) {
+		delete spriteShopText;
+		spriteShopText = nullptr;
 	}
 
 	if (spriteDrawer != nullptr) {
@@ -390,24 +411,28 @@ void CreateMap::StartMenu(float elapsedTime) {
 	switch (animeState) // UIのアニメーション
 	{
 	case 0://初期化
-		spriteDrawerPos = { 200,-450.0f };
-		spriteMapBPos = { 550,-300.0f };
+		spriteDrawerPos = { 300,-450.0f };
+		spriteMapBPos = { 650,-300.0f };
+		spriteShopBPos = { 430,-500.0f };
 		animeState++;
 		break;
 	case 1:
 		spriteDrawerPos.y += MOVE_SPEED_FAST * elapsedTime;
 		spriteMapBPos.y += MOVE_SPEED_FAST * elapsedTime;
+		spriteShopBPos.y += MOVE_SPEED_FAST * elapsedTime;
 		//一定を超えたら止まる
 		if (spriteDrawerPos.y >= 0.0f)spriteDrawerPos.y = 0.0f;
-		if (spriteMapBPos.y >= 200.0f)spriteMapBPos.y = 250.0f;
+		if (spriteMapBPos.y >= 250.0f)spriteMapBPos.y = 250.0f;
+		if (spriteShopBPos.y >= 50.0f)spriteShopBPos.y = 50.0f;
 
-		if (spriteDrawerPos.y >= 0.0f && spriteMapBPos.y >= 250.0f) {
+		if (spriteDrawerPos.y >= 0.0f && spriteMapBPos.y >= 250.0f && spriteShopBPos.y >= 50.0f) {
 			animeState++;
 		}
 		break;
 	case 2:
-		spriteDrawerPos = { 200,0.0f };
-		spriteMapBPos = { 550,250.0f };
+		spriteDrawerPos = { 300,0.0f };
+		spriteMapBPos = { 650,250.0f };
+		spriteShopBPos = { 430,50.0f };
 		isAnimation = false;
 		animeState = 0;
 		state = State::MENU;
@@ -421,26 +446,30 @@ void CreateMap::EndMenu(float elapsedTime) {
 	switch (animeState) // UIのアニメーション
 	{
 	case 0:
-		spriteDrawerPos = { 200,0.0f };
-		spriteMapBPos = { 550,150.0f };
+		spriteDrawerPos = { 300,0.0f };
+		spriteMapBPos = { 650,150.0f };
+		spriteShopBPos = { 430,50.0f };
 		isAnimation = true;
 		animeState++;
 		break;
 	case 1:
 		spriteDrawerPos.y -= MOVE_SPEED_FAST * elapsedTime;
 		spriteMapBPos.y -= MOVE_SPEED_FAST * elapsedTime;
+		spriteShopBPos.y -= MOVE_SPEED_FAST * elapsedTime;
 		//一定を超えたら止まる
 		if (spriteDrawerPos.y <= -450.0f)spriteDrawerPos.y = -450.0f;
 		if (spriteMapBPos.y <= -300.0f)spriteMapBPos.y = -300.0f;
+		if (spriteShopBPos.y <= -500.0f)spriteShopBPos.y = -500.0f;
 
-		if (spriteDrawerPos.y <= -450.0f && spriteMapBPos.y <= -300.0f) {
+		if (spriteDrawerPos.y <= -450.0f && spriteMapBPos.y <= -300.0f && spriteShopBPos.y <= -500.0f) {
 			animeState++;
 		}
 
 		break;
 	case 2:
-		spriteDrawerPos = { 200,-450.0f };
-		spriteMapBPos = { 550,-300.0f };
+		spriteDrawerPos = { 300,-450.0f };
+		spriteMapBPos = { 650,-300.0f };
+		spriteShopBPos = { 430,-500.0f };
 		isAnimation = false;
 		animeState = 0;
 		GameState::Instance().SetState(GameState::State::Game);
@@ -455,46 +484,34 @@ void CreateMap::SelectMenu(float elapsedTime) {
 
 	//もし地図ボタン（スプライトで表示）を押されたら（カーソルが範囲内かつが押されたら)stateをMAKEに変更
 	
-	if (UIButton::Instance().ButtonUp(spriteMapBPos, spriteMapBSize, MapBColor, true)) {
+	if (UIButton::Instance().ButtonUp(spriteMapBPos, spriteMapBSize, MapBColor, true, true, {160.0f*1.2f,160.0f * 1.2f},{160.0f,160.0f})) {
 		state = State::MAKE;//部屋作成モードへ遷移
 	}
-	
-	if (PointUI::Instance().ClickButton(spriteMapBPos.x, spriteMapBPos.y, spriteMapBSize.x, spriteMapBSize.y)) {
-		ShakeAngle(mapBangle, elapsedTime, 100.0f, -10.0f, 10.0f);
-		spriteMapBSize = { 160 * 1.2f,160 * 1.2f };
-	}
-	else {
-		//カーソルが範囲外の時
-//サイズを戻す
-		spriteMapBSize = { 160,160 };
-		//色を戻す
-		MapBColor = { 1,1,1,1 };
-		//角度を戻す
-		mapBangle = 0;
+	//もしショップボタン（スプライトで表示）を押されたら（カーソルが範囲内かつが押されたら)stateをSHOPに変更
+	if (UIButton::Instance().ButtonUp(spriteShopBPos, spriteShopBSize, ShopBColor, true,true, { 160.0f * 1.2f,160.0f * 1.2f }, { 160.0f,160.0f })) {
+		state = State::SHOP;//ショップへ遷移
 	}
 	
 
-	//もしショップボタン（スプライトで表示）を押されたら（カーソルが範囲内かつが押されたら)stateをBREAKに変更
-	if (PointUI::Instance().ClickButton(spriteShopPos.x, spriteShopPos.y, spriteShopSize.x, spriteShopSize.y)) {
-		if ((gamepad.GetButton() & GamePad::BTN_B &&GameState::Instance().GetControllerState() == GameState::ControllerState::Controller) ||
-			(mouse.GetButton() & Mouse::BTN_LEFT &&GameState::Instance().GetControllerState() == GameState::ControllerState::MouseAndKeyboard))
-		{
-			ShopColor = { 0.5f,0.5f,0.5f,1 };	
-		}
-		else if ((gamepad.GetButtonUp() & GamePad::BTN_B &&GameState::Instance().GetControllerState() == GameState::ControllerState::Controller)||
-			(mouse.GetButtonUp() & Mouse::BTN_LEFT &&GameState::Instance().GetControllerState() == GameState::ControllerState::MouseAndKeyboard))
-		{
-			state = State::SHOP;
-		}
-		else 
-		{
-			ShopColor = { 1,1,1,1 };
-		}
+	if (PointUI::Instance().ClickButton(spriteMapBPos.x, spriteMapBPos.y, spriteMapBSize.x, spriteMapBSize.y)) {
+		ShakeAngle(mapBangle, elapsedTime, 100.0f, -10.0f, 10.0f);
 	}
-	else 
-	{
-		ShopColor = { 1,1,1,1 };
+	else {
+		//カーソルが範囲外の時
+		//角度を戻す
+		mapBangle = 0;
 	}
+
+	if (PointUI::Instance().ClickButton(spriteShopBPos.x, spriteShopBPos.y, spriteShopBSize.x, spriteShopBSize.y)) {
+		ShakeAngle(shopBangle, elapsedTime, 100.0f, -10.0f, 10.0f);
+	}else {
+		//カーソルが範囲外の時
+		//角度を戻す
+		shopBangle = 0;
+	}
+	
+
+	
 
 
 }
@@ -520,35 +537,39 @@ void CreateMap::MenuRender(ID3D11DeviceContext* dc) {
 	//作成メニューの説明文
 	if (PointUI::Instance().ClickButton(spriteMapBPos.x, spriteMapBPos.y, spriteMapBSize.x, spriteMapBSize.y)) {
 		MessageWindow::Instance().MessageRender(dc, spriteMakeText, spriteMakeTextPos, spriteMakeTextSize, { 0.0f, 0.0f, 1.0f, 0.5f });
-
 		spriteMapBSize = { 160 * 1.2f,160 * 1.2f };
-		//色を変える
-		MapBColor = { 1.5f,1.5f,1.5f,1 };
 	}
 	else {
 		spriteMapBSize = { 160,160 };
-		//色を戻す
-		MapBColor = { 1,1,1,1 };
 	}
 
 	//ボタンの描画
 	spriteMapB->Render(dc, spriteMapBPos.x, spriteMapBPos.y, spriteMapBSize.x, spriteMapBSize.y, 0, 0, mapBTexWidth, mapBTexHeight, mapBangle, MapBColor.x, MapBColor.y, MapBColor.z, MapBColor.w);
 
-	DepthStencil::Instance().set(DepthStencil::MODE::NONE);
+	//ショップのボタン描画
+	float shopBTexHeight = static_cast<float>(spriteShopB->GetTextureHeight());
+	float shopBTexWidth = static_cast<float>(spriteShopB->GetTextureWidth());
+	//ボタンの影描画
+	spriteShopB->Render(dc, spriteShopBPos.x + 10, spriteShopBPos.y + 10, spriteShopBSize.x, spriteShopBSize.y, 0, 0, shopBTexWidth, shopBTexHeight, shopBangle * 1.5f, 0.0f, 0.0f, 0.0f, 0.5f);
+	//ショップメニューの説明文
+	if (PointUI::Instance().ClickButton(spriteShopBPos.x, spriteShopBPos.y, spriteShopBSize.x, spriteShopBSize.y)) {
+		MessageWindow::Instance().MessageRender(dc, spriteShopText, spriteShopTextPos, spriteShopTextSize, { 0.0f, 0.0f, 1.0f, 0.5f });
+		spriteShopBSize = { 160 * 1.2f,160 * 1.2f };
+	}
+	else {
+		spriteShopBSize = { 160,160 };
+
+	}
+	//ボタンの描画
+	spriteShopB->Render(dc, spriteShopBPos.x, spriteShopBPos.y, spriteShopBSize.x, spriteShopBSize.y, 0, 0, shopBTexWidth, shopBTexHeight, shopBangle, ShopBColor.x, ShopBColor.y, ShopBColor.z, ShopBColor.w);
 	
+	//メニューの描画
+	MessageWindow::Instance().MessageRender(dc, spriteMenu, spriteMenuPos, spriteMenuSize, { 1.0f,1.0f,1.0f,0.0f });
 
 
-	//作るボタンを描画
-	//float makeTexHeight = static_cast<float>(spriteMake->GetTextureHeight());
-	//float makeTexWidth = static_cast<float>(spriteMake->GetTextureWidth());
-	//spriteMake->Render(dc, spriteMakePos.x, spriteMakePos.y, spriteMakeSize.x, spriteMakeSize.y, 0, 0, makeTexWidth, makeTexHeight, 0, MakeColor.x, MakeColor.y, MakeColor.z, MakeColor.w);
-
-	////壊すボタンを描画
-	//float breakTexHeight = static_cast<float>(spriteShop->GetTextureHeight());
-	//float breakTexWidth = static_cast<float>(spriteShop->GetTextureWidth());
-	//spriteShop->Render(dc, spriteShopPos.x, spriteShopPos.y, spriteShopSize.x, spriteShopSize.y, 0, 0, breakTexWidth, breakTexHeight, 0, ShopColor.x, ShopColor.y, ShopColor.z, ShopColor.w);
 
 }
+
 
 /**********************************************************************************************************************************/
 
@@ -567,106 +588,55 @@ void CreateMap::MakeRoom(){
 
 	spriteMakePos = { 70,550 };
 
-	switch (GameState::Instance().GetMakeState())
-	{
-	case GameState::MAKESTATE::BLUE:
+	//部屋のスプライトのサイズ
+
+	SelectBluePrint();
 
 
-		if (gamepad.GetButton() & GamePad::BTN_RIGHT_SHOULDER)
-		{
-			point++;
-			if (point > 3)point = 0;
-			PointUI::Instance().SetPointPos(bulePrint.spritePos.x, bulePrint.spritePos.y + bulePrint.blockInterval * point);
-		}
-		else if (gamepad.GetButton() & GamePad::BTN_LEFT_SHOULDER)
-		{
-			point--;
-			if (point < 0)point = 3;
-			PointUI::Instance().SetPointPos(bulePrint.spritePos.x, bulePrint.spritePos.y + bulePrint.blockInterval * point);
-		}
-
-
-		if (SelectBluePrint()) {
-			GameState::Instance().SetMakeState(GameState::MAKESTATE::PUT);
-		}
-			;
-		break;
-
-
-	case GameState::MAKESTATE::PUT:
-		if (SelectBluePrint()) {
-			GameState::Instance().SetMakeState(GameState::MAKESTATE::BLUE);
-		}
 		//ステージ生成
-		if (UIButton::Instance().ButtonDown(spriteMapPos, { spriteMapSize,spriteMapSize }))
-		{
-			//部屋が制作可能だったら
-			if (!MapRoom[Map_Axis.x][Map_Axis.y]->canCreate) {
+	if (UIButton::Instance().ButtonDown(spriteMapPos, { spriteMapSize,spriteMapSize }) &&
+		!MapRoom[Map_Axis.x][Map_Axis.y]->canCreate &&
+		selectRoom->roomType != Room::EMPTY)
+	{
+		//部屋が制作可能だったら
 
-				if (selectRoom->roomType != Room::EMPTY) {
-					//部屋の登録処理
-					registerRoom(MapRoom[Map_Axis.x][Map_Axis.y], Map_Axis, selectRoom->roomType, selectRoom->angleType, false, true);
+			//部屋の登録処理
+		registerRoom(MapRoom[Map_Axis.x][Map_Axis.y], Map_Axis, selectRoom->roomType, selectRoom->angleType, false, true);
 
-					clearRoom = true;//部屋削除を可能にする
+		clearRoom = true;//部屋削除を可能にする
 
-					CreateRoom(MapRoom[Map_Axis.x][Map_Axis.y]);//部屋の生成
+		CreateRoom(MapRoom[Map_Axis.x][Map_Axis.y]);//部屋の生成
 
-					//所持している設計図をクリアする
+		//所持している設計図をクリアする
 
-					selectRoom->roomType = Room::EMPTY;
-					selectRoom->angleType = 0;
-					haveRoom[selectNo]->roomType = Room::EMPTY;
-					haveRoom[selectNo]->color = { 1,1,1,1 };
-					roomAng = 0;
+		selectRoom->roomType = Room::EMPTY;
+		selectRoom->angleType = 0;
+		haveRoom[selectNo]->roomType = Room::EMPTY;
+		haveRoom[selectNo]->color = { 1,1,1,1 };
+		selectFlag = false;//選択フラグを下ろす
+		roomAng = 0;
 
 
-				}
+	}
 
-			}
-		}
-
-		////破壊ボタンの処理
-		if (UIButton::Instance().ButtonUp(spriteDeletePos, spriteDeleteSize, DeleteColor, true)) {
-			selectRoom->roomType = Room::EMPTY;
-			selectRoom->angleType = 0;
-			haveRoom[selectNo]->roomType = Room::EMPTY;
-			haveRoom[selectNo]->color = { 1,1,1,1 };
-			roomAng = 0;
-		}
-		break;
 	
-	case GameState::MAKESTATE::ROTATE:
-		break;
+	////破壊ボタンの処理
+	if (UIButton::Instance().ButtonUp(spriteDeletePos, spriteDeleteSize, DeleteColor, true, true, { 200.0f * 1.2f,95.0f * 1.2f }, { 200,95 }) && selectRoom->roomType != Room::EMPTY) {
+		selectRoom->roomType = Room::EMPTY;
+		selectRoom->angleType = 0;
+		haveRoom[selectNo]->roomType = Room::EMPTY;
+		haveRoom[selectNo]->color = { 1,1,1,1 };
+		roomAng = 0;
+		selectFlag = false;//選択フラグを下ろす
+		GameState::Instance().SetMakeState(GameState::MAKESTATE::BLUE);
 
-
-
-	default:
-		break;
 	}
 
 
-	
-
-
-
-
-	//ゲーム画面に戻った時の処理
-	//if (selectRoom->roomType != Room::EMPTY) {
-	//	if ((gamepad.GetButtonDown() & GamePad::BTN_X && GameState::Instance().GetControllerState() == GameState::Controller)||
-	//		(GetAsyncKeyState('M') & 1 && GameState::Instance().GetControllerState() == GameState::MouseAndKeyboard))
-	//	{
-	//	haveRoom[selectNo]->roomType = selectRoom->roomType;
-	//	haveRoom[selectNo]->color = { 1,1,1,1 };
-	//	selectRoom->roomType = Room::EMPTY;
-	//	selectRoom->angleType = 0;
-	//	}
-	//}
-
-	
-
 	//戻るボタン処理
 	
-	if (UIButton::Instance().ButtonUp(spriteBackPos, spriteBackSize, BackColor,true)|| (gamepad.GetButtonDown() & GamePad::BTN_X && GameState::Instance().GetControllerState() == GameState::Controller) ||
+	if (UIButton::Instance().ButtonUp(spriteBackPos, spriteBackSize, BackColor,true,true,{ 150.0f*1.2f,75.0f*1.2f },{ 150.0f,75.0f }) ||
+		(gamepad.GetButtonDown() & GamePad::BTN_X && GameState::Instance().GetControllerState() == GameState::Controller) ||
 		(GetAsyncKeyState('M') & 1 && GameState::Instance().GetControllerState() == GameState::MouseAndKeyboard)) {
 
 		//設計図を持っていたらリセットする処理
@@ -676,6 +646,7 @@ void CreateMap::MakeRoom(){
 			haveRoom[selectNo]->color = { 1,1,1,1 };
 			selectRoom->roomType = Room::EMPTY;
 			selectRoom->angleType = 0;
+			selectFlag = false;//選択フラグを下ろす
 		}
 		state = State::STARTMENU;
 
@@ -754,31 +725,41 @@ void CreateMap::MakeRender(ID3D11DeviceContext* dc) {
 
 
 bool CreateMap::SelectBluePrint() {
-
 	//設計図内の処理
 	for (int i = 0; i < 4; i++)
 	{
+	
 
-		if (UIButton::Instance().ButtonDown({ bulePrint.spritePos.x, bulePrint.spritePos.y + bulePrint.blockInterval * i }, bulePrint.spriteSize)) {
-			if (selectRoom->roomType == Room::EMPTY&& GameState::Instance().GetMakeState() == GameState::BLUE) //もし何も選択されていなければ
+		if (UIButton::Instance().ButtonDown({ bulePrint.spritePos.x, bulePrint.spritePos.y + bulePrint.blockInterval * i }, bulePrint.spriteSize) && !selectFlag) {
+			if (selectRoom->roomType == Room::EMPTY && haveRoom[i]->roomType != Room::EMPTY) //もし何も選択されていなければ
 			{
 				//選択欄の設計図を所持する処理
-				selectRoom->roomType = haveRoom[i]->roomType;
-				haveRoom[i]->color = { 0.8f,0.8f,0.8f,1.0f };
-				selectNo = i;
-				return true;
-			}
-			else if(GameState::Instance().GetMakeState()==GameState::PUT){
+				selectNo = i;//選択番号をセット
+				selectRoom->roomType = haveRoom[i]->roomType;//選択している部屋のタイプをセット
+				haveRoom[i]->color = { 0.8f,0.8f,0.8f,1.0f };//選択している部屋の色を変える
+				selectFlag = true;//選択フラグを立てる
 
-				haveRoom[selectNo]->roomType = selectRoom->roomType;
-				haveRoom[selectNo]->color = { 1,1,1,1 };
-				selectRoom->roomType = Room::EMPTY;
-				selectRoom->angleType = 0;
 				return true;
 			}
+		
 
 		}
 
+
+	}
+
+	if (UIButton::Instance().ButtonDown({ bulePrint.spritePos.x, bulePrint.spritePos.y + bulePrint.blockInterval * selectNo }, bulePrint.spriteSize)&&selectFlag)
+	{
+		if (selectRoom->roomType != Room::EMPTY) {
+
+			haveRoom[selectNo]->roomType = selectRoom->roomType;
+			haveRoom[selectNo]->color = { 1,1,1,1 };
+			selectRoom->roomType = Room::EMPTY;
+			selectRoom->angleType = 0;
+			selectFlag = false;//選択フラグを下げる
+
+			return true;
+		}
 	}
 
 	return false;
@@ -868,7 +849,7 @@ void CreateMap::ShopMenu(float elapsedTime) {
 
 
 	//戻る時の処理
-	if (UIButton::Instance().ButtonUp(spriteBackPos, spriteBackSize, BackColor, true)) {
+	if (UIButton::Instance().ButtonUp(spriteBackPos, spriteBackSize, BackColor, true,true,{ 150.0f*1.2,75.0f*1.2f },{ 150.0f,75.0f })) {
 		state = State::STARTMENU;
 	}
 	
@@ -882,7 +863,7 @@ void CreateMap::ShopMenu(float elapsedTime) {
 		case 0://回復アイテム
 
 			//回復アイテムの購入処理
-			if (UIButton::Instance().ButtonUp(spritePayPos[i], spritePaySize, payColor[i], true) && payTimer <= 0.0f) {
+			if (UIButton::Instance().ButtonUp(spritePayPos[i], spritePaySize, payColor[i], true, false) && payTimer <= 0.0f) {
 				if (Player::Instance().lifeItem <= 5 && Player::Instance().AddCoin(-2))
 				{
 					Player::Instance().lifeItem++;
@@ -902,7 +883,7 @@ void CreateMap::ShopMenu(float elapsedTime) {
 
 		case 1://パワーアップアイテム
 			//パワーアップアイテムの購入処理
-			if (UIButton::Instance().ButtonUp(spritePayPos[i], spritePaySize, payColor[i], true) && payTimer <= 0.0f) {
+			if (UIButton::Instance().ButtonUp(spritePayPos[i], spritePaySize, payColor[i], true,false) && payTimer <= 0.0f) {
 				if (Player::Instance().AddCoin(-3) && Player::Instance().powerItem <= 2)
 				{
 					Player::Instance().powerItem++;//パワーポーションを増やす
@@ -918,7 +899,7 @@ void CreateMap::ShopMenu(float elapsedTime) {
 
 		case 2://設計図
 			//設計図の購入処理
-			if (UIButton::Instance().ButtonUp(spritePayPos[i], spritePaySize, payColor[i], true) && payTimer <= 0.0f) {
+			if (UIButton::Instance().ButtonUp(spritePayPos[i], spritePaySize, payColor[i], true,false) && payTimer <= 0.0f) {
 
 				if (!HaveRoomMax()) {//設計図が最大でなければ
 					std::random_device rd;

@@ -29,13 +29,21 @@ public:
 	//描画処理
 	void Render(Graphics& graphics,ID3D11DeviceContext* dc);
 
+	//ゲーム中の更新
+	void GameUpdate(float elapsedTime);
+
+	//ダメージアニメーション
 	void DamageAnimation(float elapsedTime);
 
 	int animeState = -1;
 
 private:
 	const float MAX_GEAR_SPEED = 100.0f;
+	const float MAX_GEAR_ANG = 360.0f;
+	const float DMAGE_GEAR_SPEED = 500.0f; //ダメージ時の歯車の回転速度
+
 	float GearSpeed = 0.0f;
+
 
 	Sprite* spriteFrame = nullptr;
 	Sprite* spriteGear = nullptr;

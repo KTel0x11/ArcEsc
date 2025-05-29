@@ -14,12 +14,10 @@ void UIButton::Finalize()
 }
 
 
-bool UIButton::ButtonUp(DirectX::XMFLOAT2 pos, DirectX::XMFLOAT2 size, DirectX::XMFLOAT4& color, bool colorChange)
+bool UIButton::ButtonUp(DirectX::XMFLOAT2 pos, DirectX::XMFLOAT2& size, DirectX::XMFLOAT4& color, bool colorChange, bool sizeChange, const DirectX::XMFLOAT2 changeSize, const DirectX::XMFLOAT2 oldSize)
 {
 	GamePad& gamepad = Input::Instance().GetGamePad();
 	Mouse& mouse = Input::Instance().GetMouse();
-
-	DirectX::XMFLOAT2 oldSize = size;
 
 	//カーソルポインターがボタンの範囲内に入ったら
 	if (PointUI::Instance().ClickButton(pos.x, pos.y, size.x, size.y))
@@ -30,6 +28,12 @@ bool UIButton::ButtonUp(DirectX::XMFLOAT2 pos, DirectX::XMFLOAT2 size, DirectX::
 		if ((gamepad.GetButton() & GamePad::BTN_B && GameState::Instance().GetControllerState() == GameState::Controller) ||
 			(mouse.GetButton() & Mouse::BTN_LEFT && GameState::Instance().GetControllerState() == GameState::MouseAndKeyboard))//ボタンが押されたら
 		{
+			//サイズを変える
+			if (sizeChange)
+			{
+				size = oldSize;
+			}
+	
 			//色を変える
 			if (colorChange)
 			{
@@ -44,14 +48,16 @@ bool UIButton::ButtonUp(DirectX::XMFLOAT2 pos, DirectX::XMFLOAT2 size, DirectX::
 		else
 		{
 			//サイズを変える
+			if (sizeChange)
+			{
+				size = changeSize;
+			}
 
-			size.x = oldSize.x * 1.2f;
-			size.y = oldSize.y * 1.2f;
 
 			//色を変える
 			if (colorChange)
 			{
-				color = { 1,1,1,1 };
+				color = { 1.5f,1.5f,1.5f,1 };
 			}
 
 		}
@@ -59,7 +65,12 @@ bool UIButton::ButtonUp(DirectX::XMFLOAT2 pos, DirectX::XMFLOAT2 size, DirectX::
 	else
 	{
 		//カーソルが範囲外の時
-	
+		//サイズを戻す
+		if (sizeChange)
+		{
+			size = oldSize;
+		}
+
 		//色を戻す
 		if (colorChange)
 		{

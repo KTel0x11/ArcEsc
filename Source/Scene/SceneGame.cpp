@@ -66,8 +66,11 @@ void SceneGame::Initialize()
 	//gauge = new Sprite("Data/Sprite/hp_boss_01.png");
 	//spriteEnemyHP = new Sprite("Data/Sprite/hp_boss_frame.png");
 	//spriteEHPBar = new Sprite("Data/Sprite/hp_boss_01.png");
-	spritePauseButton = new Sprite("Data/Sprite/PauseGuide.png");
+	
+
 	spriteGuide = new Sprite("Data/Sprite/Guide.png");
+	spritePauseButtonPad = new Sprite("Data/Sprite/PauseGuide.png");
+	spritePauseButtonKM = new Sprite("Data/Sprite/PauseGuideKey.png");
 	spriteClear = debug_new Sprite("Data/Sprite/Clear.png");
 	spriteOver = debug_new Sprite("Data/Sprite/Over.png");
 
@@ -95,10 +98,15 @@ void SceneGame::Finalize()
 			spriteGuide = nullptr;
 		}
 
-		if (spritePauseButton != nullptr)
+		if (spritePauseButtonPad != nullptr)
 		{
-			delete spritePauseButton;
-			spritePauseButton = nullptr;
+			delete spritePauseButtonPad;
+			spritePauseButtonPad = nullptr;
+		}
+		if (spritePauseButtonKM != nullptr)
+		{
+			delete spritePauseButtonKM;
+			spritePauseButtonKM = nullptr;
 		}
 
 		if (spriteEHPBar != nullptr) {
@@ -473,10 +481,16 @@ void SceneGame::Render()
 			UIFrame::Instance().Render(graphics, dc);
 
 			//ポーズのボタンガイド
+			if(GameState::Instance().GetControllerState()==GameState::ControllerState::Controller){
+				float PauseTexWidth = static_cast<float>(spritePauseButtonPad->GetTextureWidth());
+				float PauseTexHeight = static_cast<float>(spritePauseButtonPad->GetTextureHeight());
+				spritePauseButtonPad->Render(dc, 64, 660, 512, 32, 0, 0, PauseTexWidth, PauseTexHeight, 0, 1, 1, 1, 1);
+			}
+			else
 			{
-				float PauseTexWidth = static_cast<float>(spritePauseButton->GetTextureWidth());
-				float PauseTexHeight = static_cast<float>(spritePauseButton->GetTextureHeight());
-				spritePauseButton->Render(dc, 64, 660, 512, 32, 0, 0, PauseTexWidth, PauseTexHeight, 0, 1, 1, 1, 1);
+				float PauseTexWidth = static_cast<float>(spritePauseButtonKM->GetTextureWidth());
+				float PauseTexHeight = static_cast<float>(spritePauseButtonKM->GetTextureHeight());
+				spritePauseButtonKM->Render(dc, 64, 660, 512, 32, 0, 0, PauseTexWidth, PauseTexHeight, 0, 1, 1, 1, 1);
 			}
 
 			//Enemy_HP_UI関連
@@ -529,10 +543,17 @@ void SceneGame::Render()
 
 			//frameUI->Render(graphics, dc);
 			UIFrame::Instance().Render(graphics, dc);
+			//ポーズのボタンガイド
+			if (GameState::Instance().GetControllerState() == GameState::ControllerState::Controller) {
+				float PauseTexWidth = static_cast<float>(spritePauseButtonPad->GetTextureWidth());
+				float PauseTexHeight = static_cast<float>(spritePauseButtonPad->GetTextureHeight());
+				spritePauseButtonPad->Render(dc, 64, 660, 512, 32, 0, 0, PauseTexWidth, PauseTexHeight, 0, 1, 1, 1, 1);
+			}
+			else
 			{
-				float PauseTexWidth = static_cast<float>(spritePauseButton->GetTextureWidth());
-				float PauseTexHeight = static_cast<float>(spritePauseButton->GetTextureHeight());
-				spritePauseButton->Render(dc, 64, 660, 512, 32, 0, 0, PauseTexWidth, PauseTexHeight, 0, 1, 1, 1, 1);
+				float PauseTexWidth = static_cast<float>(spritePauseButtonKM->GetTextureWidth());
+				float PauseTexHeight = static_cast<float>(spritePauseButtonKM->GetTextureHeight());
+				spritePauseButtonKM->Render(dc, 64, 660, 512, 32, 0, 0, PauseTexWidth, PauseTexHeight, 0, 1, 1, 1, 1);
 			}
 
 			
@@ -650,11 +671,19 @@ void SceneGame::Render()
 
 
 			//ポーズのボタンガイド
-			{
-				float PauseTexWidth = static_cast<float>(spritePauseButton->GetTextureWidth());
-				float PauseTexHeight = static_cast<float>(spritePauseButton->GetTextureHeight());
-				spritePauseButton->Render(dc, 64, 660, 512, 32, 0, 0, PauseTexWidth, PauseTexHeight, 0, 1, 1, 1, 1);
+					//ポーズのボタンガイド
+			if (GameState::Instance().GetControllerState() == GameState::ControllerState::Controller) {
+				float PauseTexWidth = static_cast<float>(spritePauseButtonPad->GetTextureWidth());
+				float PauseTexHeight = static_cast<float>(spritePauseButtonPad->GetTextureHeight());
+				spritePauseButtonPad->Render(dc, 64, 660, 512, 32, 0, 0, PauseTexWidth, PauseTexHeight, 0, 1, 1, 1, 1);
 			}
+			else
+			{
+				float PauseTexWidth = static_cast<float>(spritePauseButtonKM->GetTextureWidth());
+				float PauseTexHeight = static_cast<float>(spritePauseButtonKM->GetTextureHeight());
+				spritePauseButtonKM->Render(dc, 64, 660, 512, 32, 0, 0, PauseTexWidth, PauseTexHeight, 0, 1, 1, 1, 1);
+			}
+
 
 			//Enemy_HP_UI関連
 #if 0
@@ -714,13 +743,19 @@ void SceneGame::Render()
 
 			}
 
-
 			//ポーズのボタンガイド
-			{
-				float PauseTexWidth = static_cast<float>(spritePauseButton->GetTextureWidth());
-				float PauseTexHeight = static_cast<float>(spritePauseButton->GetTextureHeight());
-				spritePauseButton->Render(dc, 64, 660, 512, 32, 0, 0, PauseTexWidth, PauseTexHeight, 0, 1, 1, 1, 1);
+			if (GameState::Instance().GetControllerState() == GameState::ControllerState::Controller) {
+				float PauseTexWidth = static_cast<float>(spritePauseButtonPad->GetTextureWidth());
+				float PauseTexHeight = static_cast<float>(spritePauseButtonPad->GetTextureHeight());
+				spritePauseButtonPad->Render(dc, 64, 660, 512, 32, 0, 0, PauseTexWidth, PauseTexHeight, 0, 1, 1, 1, 1);
 			}
+			else
+			{
+				float PauseTexWidth = static_cast<float>(spritePauseButtonKM->GetTextureWidth());
+				float PauseTexHeight = static_cast<float>(spritePauseButtonKM->GetTextureHeight());
+				spritePauseButtonKM->Render(dc, 64, 660, 512, 32, 0, 0, PauseTexWidth, PauseTexHeight, 0, 1, 1, 1, 1);
+			}
+
 
 			//Enemy_HP_UI関連
 #if 0
