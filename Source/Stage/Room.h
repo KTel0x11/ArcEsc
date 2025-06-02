@@ -69,11 +69,11 @@ private:
 
 
 
-	SpriteInfo bulePrint{
-	{140.0f, 140.0f },
-	{70.0f,70.0f},
-	92.5f,
-	
+
+	Room::SpriteInfo bulePrint{
+	{1035.0f, 88.0f },
+	{60.0f,60.0f},
+	  74.0f
 	};
 
 

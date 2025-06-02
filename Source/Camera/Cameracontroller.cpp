@@ -11,8 +11,8 @@ void CameraController::Update(float elapsedTime) {
 
 
 
+	{
 
-	if (GameState::Instance().GetControllerState() == GameState::ControllerState::MouseAndKeyboard) {
 		//マウスの位置を取得
 		float mouseX = Input::Instance().GetMouse().GetPositionX();
 		float mouseY = Input::Instance().GetMouse().GetPositionY();
@@ -35,7 +35,7 @@ void CameraController::Update(float elapsedTime) {
 		angle.y += dx * speed;
 
 	}
-	else if (GameState::Instance().GetControllerState() == GameState::ControllerState::Controller) {
+	{
 		GamePad& gamePad = Input::Instance().GetGamePad();
 		float ax = gamePad.GetAxisRY();
 		float ay = gamePad.GetAxisRX();

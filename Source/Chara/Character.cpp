@@ -170,79 +170,6 @@ void Character::UpdateVerticalVelocity(float elapsedFrame) {
 	velocity.y += gravity * elapsedFrame;
 }
 
-//void Character::UpdateHorizontalVelocity(float elapsedFrame)
-//{
-//	float length = sqrtf(velocity.x * velocity.x + velocity.z * velocity.z);
-//
-//	if (length > 0.0f)
-//	{
-//		float friction = this->friction * elapsedFrame;
-//
-//
-//		if (length > friction)
-//		{
-//
-//
-//			if (!this->IsGround()) {
-//				friction -= airControl * elapsedFrame;
-//			}
-//
-//			//単位ベクトル化
-//			float vx = velocity.x / length;
-//			float vz = velocity.z / length;
-//
-//			velocity.x -= vx * friction;
-//			velocity.z -= vz * friction;
-//		}
-//		//横方向の速力が摩擦力以下になったので速力を無効化
-//		else
-//		{
-//			velocity.x = 0.0f;
-//			velocity.z = 0.0f;
-//		}
-//
-//	}
-//	if (length <= maxMoveSpeed)
-//	{
-//		float moveVecLength = sqrtf(moveVecX * moveVecX + moveVecZ * moveVecZ);
-//
-//		if (moveVecLength > 0.0f) {
-//
-//			float acceleration = this->acceleration * elapsedFrame;
-//
-//			velocity.x += moveVecX * acceleration;
-//			velocity.z += moveVecZ * acceleration;
-//
-//			float length = sqrtf(velocity.x * velocity.x + velocity.z * velocity.z);
-//			if (length > maxMoveSpeed)
-//			{
-//				if (!this->IsGround()) {
-//					maxMoveSpeed -= airControl * elapsedFrame;
-//				}
-//
-//				float vx = velocity.x / length;
-//				float vz = velocity.z / length;
-//
-//				velocity.x = vx * maxMoveSpeed;
-//				velocity.z = vz * maxMoveSpeed;
-//
-//			}
-//
-//			if (isGround && slopeRate > 0.0f) {
-//				velocity.y -= length * slopeRate * elapsedFrame;
-//			}
-//
-//		}
-//
-//	}
-//
-//	moveVecX = 0.0f;
-//	moveVecZ = 0.0f;
-//
-//}
-
-
-//水平加速度処理
 void Character::UpdateHorizontalVelocity(float elapsedFrame)
 {
 	float length = sqrtf(velocity.x * velocity.x + velocity.z * velocity.z);
@@ -250,15 +177,15 @@ void Character::UpdateHorizontalVelocity(float elapsedFrame)
 	if (length > 0.0f)
 	{
 		float friction = this->friction * elapsedFrame;
-		
+
 
 		if (length > friction)
 		{
 
 
-		if (!this->IsGround()) {
-			friction -= airControl * elapsedFrame;
-		}
+			if (!this->IsGround()) {
+				friction -= airControl * elapsedFrame;
+			}
 
 			//単位ベクトル化
 			float vx = velocity.x / length;
@@ -287,10 +214,10 @@ void Character::UpdateHorizontalVelocity(float elapsedFrame)
 			velocity.z += moveVecZ * acceleration;
 
 			float length = sqrtf(velocity.x * velocity.x + velocity.z * velocity.z);
-			if(length>maxMoveSpeed)
+			if (length > maxMoveSpeed)
 			{
-				if (!this->IsGround()){
-					maxMoveSpeed -= airControl*elapsedFrame;
+				if (!this->IsGround()) {
+					maxMoveSpeed -= airControl * elapsedFrame;
 				}
 
 				float vx = velocity.x / length;
@@ -298,7 +225,7 @@ void Character::UpdateHorizontalVelocity(float elapsedFrame)
 
 				velocity.x = vx * maxMoveSpeed;
 				velocity.z = vz * maxMoveSpeed;
-			
+
 			}
 
 			if (isGround && slopeRate > 0.0f) {
@@ -306,304 +233,377 @@ void Character::UpdateHorizontalVelocity(float elapsedFrame)
 			}
 
 		}
-		
+
 	}
-	
+
 	moveVecX = 0.0f;
 	moveVecZ = 0.0f;
-	
+
 }
+
+//
+////水平加速度処理
+//void Character::UpdateHorizontalVelocity(float elapsedFrame)
+//{
+//	float length = sqrtf(velocity.x * velocity.x + velocity.z * velocity.z);
+//
+//	if (length > 0.0f)
+//	{
+//		float friction = this->friction * elapsedFrame;
+//		
+//
+//		if (length > friction)
+//		{
+//
+//
+//		if (!this->IsGround()) {
+//			friction -= airControl * elapsedFrame;
+//		}
+//
+//			//単位ベクトル化
+//			float vx = velocity.x / length;
+//			float vz = velocity.z / length;
+//
+//			velocity.x -= vx * friction;
+//			velocity.z -= vz * friction;
+//		}
+//		//横方向の速力が摩擦力以下になったので速力を無効化
+//		else
+//		{
+//			velocity.x = 0.0f;
+//			velocity.z = 0.0f;
+//		}
+//
+//	}
+//	if (length <= maxMoveSpeed)
+//	{
+//		float moveVecLength = sqrtf(moveVecX * moveVecX + moveVecZ * moveVecZ);
+//
+//		if (moveVecLength > 0.0f) {
+//
+//			float acceleration = this->acceleration * elapsedFrame;
+//
+//			velocity.x += moveVecX * acceleration;
+//			velocity.z += moveVecZ * acceleration;
+//
+//			float length = sqrtf(velocity.x * velocity.x + velocity.z * velocity.z);
+//			if(length>maxMoveSpeed)
+//			{
+//				if (!this->IsGround()){
+//					maxMoveSpeed -= airControl*elapsedFrame;
+//				}
+//
+//				float vx = velocity.x / length;
+//				float vz = velocity.z / length;
+//
+//				velocity.x = vx * maxMoveSpeed;
+//				velocity.z = vz * maxMoveSpeed;
+//			
+//			}
+//
+//			if (isGround && slopeRate > 0.0f) {
+//				velocity.y -= length * slopeRate * elapsedFrame;
+//			}
+//
+//		}
+//		
+//	}
+//	
+//	moveVecX = 0.0f;
+//	moveVecZ = 0.0f;
+//	
+//}
 
 //垂直移動処理
 
 
-//
-//void Character::UpdateVerticalMove(float elapsedTime) {
-//	float my = velocity.y * elapsedTime;
-//	//float my = velocity.y * elapsedTime;
-//	// キャラクターのY軸方向となる法線ベクトル
-//	DirectX::XMFLOAT3 normal = { 0, 1, 0 };
-//
-//	// 落下中または接地している場合
-//	if (my <= 0.0f) {
-//		DirectX::XMFLOAT3 start = { position.x, position.y + stepOffset, position.z };
-//		DirectX::XMFLOAT3 end = { position.x + velocity.x * elapsedTime,
-//								  position.y + my,
-//								  position.z + velocity.z * elapsedTime };;
-//
-//		HitResult hit;
-//		if (StageManager::Instance().RayCast(start, end, hit)) {
-//			normal = hit.normal;
-//			position = hit.position;
-//
-//			if (GimmickManager::Instance().RayCast(start, end, hit)) {
-//				OnPoison = true;
-//			}
-//			else {
-//				OnPoison = false;
-//			}
-//
-//
-//			// 壁と床の判定
-//			if (fabs(hit.normal.y) < 0.7f) { // 壁の場合
-//				// 壁との判定：滑り処理も着地処理も行わない
-//				velocity.y = 0.0f;
-//				return;
-//			}
-//
-//			float normalLengthXZ = sqrtf(hit.normal.x * hit.normal.x + hit.normal.z * hit.normal.z);
-//			slopeRate = 1.0f - (hit.normal.y / (normalLengthXZ + hit.normal.y));
-//
-//			if (!isGround) {
-//				OnLanding(); // 着地処理
-//			}
-//
-//			velocity.y = 0.0f;
-//			isGround = true;
-//
-//			// 傾斜判定：傾斜角がしきい値を超えた場合に滑る
-//			float slopeAngle = acosf(hit.normal.y) * (180.0f / 3.14159265f); // 傾斜角度（度数法）
-//
-//			if (slopeAngle > 20.0f&&fabs(hit.normal.y) > 0.7f) { // 30度以上の傾斜で滑る
-//				float slideSpeed = 0;
-//				slideSpeed += 10 * slopeRate * 9.8f; // 傾斜に基づく滑り速度
-//				velocity.x += hit.normal.x * slideSpeed;
-//				velocity.z += hit.normal.z * slideSpeed;
-//			}
-//		}
-//		else {
-//			position.y += my;
-//			isGround = false;
-//		}
-//	}
-//	else if (my > 0.0f) {
-//		position.y += my;
-//		isGround = false;
-//	}
-//
-//	DirectX::XMFLOAT3 start = { position.x, position.y + stepOffset, position.z };
-//	DirectX::XMFLOAT3 end = { position.x + velocity.x * elapsedTime,
-//							  position.y + velocity.y * elapsedTime ,
-//							  position.z + velocity.z * elapsedTime };
-//
-//	HitResult hit;
-//
-//	//int numSteps = 5; // 高速移動中の補間ステップ数
-//	//bool hitDetected = false;
-//	//for (int i = 0; i <= numSteps; ++i) {
-//	//	float t = static_cast<float>(i) / numSteps;
-//	//	DirectX::XMFLOAT3 interpolatedStart = {
-//	//		start.x + t * (end.x - start.x),
-//	//		start.y + t * (end.y - start.y),
-//	//		start.z + t * (end.z - start.z),
-//	//	};
-//
-//	//	if (StageManager::Instance().RayCast(interpolatedStart, end, hit)) {
-//	//		hitDetected = true;
-//	//		break;
-//	//	}
-//	//}
-//
-//	//if (hitDetected) {
-//	//	// 衝突処理
-//	//}
-//	//else {
-//	//	position.x += velocity.x * elapsedTime;
-//	//	position.z += velocity.z * elapsedTime;
-//	//}
-//
-//
-//
-//	// 地面の向きに沿うようにXZ軸回転
-//	{
-//	/*	float ax = atan2f(normal.z, normal.y);
-//		float az = -atan2f(normal.x, normal.y);
-//		angle.x = Mathf::Lerp(angle.x, ax, 0.2f);
-//		angle.z = Mathf::Lerp(angle.z, az, 0.2f);*/
-//	}
-//}
-
 
 void Character::UpdateVerticalMove(float elapsedTime) {
-
-
-	//垂直方向の移動量
 	float my = velocity.y * elapsedTime;
+	//float my = velocity.y * elapsedTime;
+	// キャラクターのY軸方向となる法線ベクトル
+	DirectX::XMFLOAT3 normal = { 0, 1, 0 };
 
-	//キャラクターのY軸方向となる法線ベクトル
-	DirectX::XMFLOAT3 normal = { 0,1,0 };
-
-	//落下中
-	if (my < 0.0f)
-	{
-		DirectX::XMFLOAT3 start = { position.x,position.y + stepOffset,position.z };
-
-		DirectX::XMFLOAT3 end = { position.x,position.y + my,position.z };
+	// 落下中または接地している場合
+	if (my <= 0.0f) {
+		DirectX::XMFLOAT3 start = { position.x, position.y + stepOffset, position.z };
+		DirectX::XMFLOAT3 end = { position.x + velocity.x * elapsedTime,
+								  position.y + my,
+								  position.z + velocity.z * elapsedTime };;
 
 		HitResult hit;
-		if (StageManager::Instance().RayCast(start, end, hit))
-		{
+		if (StageManager::Instance().RayCast(start, end, hit)) {
 			normal = hit.normal;
 			position = hit.position;
-			float normalLengthXZ = sqrtf(hit.normal.x * hit.normal.z + hit.normal.x * hit.normal.z);
+
+			if (GimmickManager::Instance().RayCast(start, end, hit)) {
+				OnPoison = true;
+			}
+			else {
+				OnPoison = false;
+			}
+
+
+			// 壁と床の判定
+			if (fabs(hit.normal.y) < 0.7f) { // 壁の場合
+				// 壁との判定：滑り処理も着地処理も行わない
+				velocity.y = 0.0f;
+				return;
+			}
+
+			float normalLengthXZ = sqrtf(hit.normal.x * hit.normal.x + hit.normal.z * hit.normal.z);
 			slopeRate = 1.0f - (hit.normal.y / (normalLengthXZ + hit.normal.y));
 
-			if (!isGround)
-			{
-				OnLanding();
+			if (!isGround) {
+				OnLanding(); // 着地処理
 			}
-			isGround = true;
+
 			velocity.y = 0.0f;
+			isGround = true;
 
-			angle.y += hit.rotation.y;
+			// 傾斜判定：傾斜角がしきい値を超えた場合に滑る
+			float slopeAngle = acosf(hit.normal.y) * (180.0f / 3.14159265f); // 傾斜角度（度数法）
 
-
-
+			if (slopeAngle > 20.0f&&fabs(hit.normal.y) > 0.7f) { // 30度以上の傾斜で滑る
+				float slideSpeed = 0;
+				slideSpeed += 10 * slopeRate * 9.8f; // 傾斜に基づく滑り速度
+				velocity.x += hit.normal.x * slideSpeed;
+				velocity.z += hit.normal.z * slideSpeed;
+			}
 		}
 		else {
 			position.y += my;
 			isGround = false;
 		}
-
-
 	}
 	else if (my > 0.0f) {
 		position.y += my;
 		isGround = false;
 	}
 
-	//地面の向きに沿うようにXZ軸回転
+	DirectX::XMFLOAT3 start = { position.x, position.y + stepOffset, position.z };
+	DirectX::XMFLOAT3 end = { position.x + velocity.x * elapsedTime,
+							  position.y + velocity.y * elapsedTime ,
+							  position.z + velocity.z * elapsedTime };
+
+	HitResult hit;
+
+	//int numSteps = 5; // 高速移動中の補間ステップ数
+	//bool hitDetected = false;
+	//for (int i = 0; i <= numSteps; ++i) {
+	//	float t = static_cast<float>(i) / numSteps;
+	//	DirectX::XMFLOAT3 interpolatedStart = {
+	//		start.x + t * (end.x - start.x),
+	//		start.y + t * (end.y - start.y),
+	//		start.z + t * (end.z - start.z),
+	//	};
+
+	//	if (StageManager::Instance().RayCast(interpolatedStart, end, hit)) {
+	//		hitDetected = true;
+	//		break;
+	//	}
+	//}
+
+	//if (hitDetected) {
+	//	// 衝突処理
+	//}
+	//else {
+	//	position.x += velocity.x * elapsedTime;
+	//	position.z += velocity.z * elapsedTime;
+	//}
+
+
+
+	// 地面の向きに沿うようにXZ軸回転
 	{
-		//Y軸が法線ベクトルに向くオイラー角回転を算出する
-		float ax = atan2f(normal.z, normal.y);
+	/*	float ax = atan2f(normal.z, normal.y);
 		float az = -atan2f(normal.x, normal.y);
-
-		//線形補完で滑らかに回転する
 		angle.x = Mathf::Lerp(angle.x, ax, 0.2f);
-		angle.z = Mathf::Lerp(angle.z, az, 0.2f);
+		angle.z = Mathf::Lerp(angle.z, az, 0.2f);*/
 	}
-
-
 }
 
-
-
-
 //
-//void Character::UpdateHorizontalMove(float elapsedTime) {
-//	// 水平速力量計算
-//	float velocityLengthXZ = sqrtf(velocity.x * velocity.x + velocity.z * velocity.z);
-//	if (velocityLengthXZ > 0.0f) {
-//		float mx = velocity.x * speed * elapsedTime;
-//		float mz = velocity.z * speed * elapsedTime;
+//void Character::UpdateVerticalMove(float elapsedTime) {
 //
-//		// キャラクターの中心からの移動先
-//		DirectX::XMFLOAT3 start = { position.x, position.y + stepOffset, position.z };
-//		DirectX::XMFLOAT3 end = { position.x + mx, position.y + stepOffset, position.z + mz };
 //
-//		// 壁判定
+//	//垂直方向の移動量
+//	float my = velocity.y * elapsedTime;
+//
+//	//キャラクターのY軸方向となる法線ベクトル
+//	DirectX::XMFLOAT3 normal = { 0,1,0 };
+//
+//	//落下中
+//	if (my < 0.0f)
+//	{
+//		DirectX::XMFLOAT3 start = { position.x,position.y + stepOffset,position.z };
+//
+//		DirectX::XMFLOAT3 end = { position.x,position.y + my,position.z };
+//
 //		HitResult hit;
-//		if (StageManager::Instance().RayCast(start, end, hit)) {
-//			// レイが壁に当たった場合
+//		if (StageManager::Instance().RayCast(start, end, hit))
+//		{
+//			normal = hit.normal;
+//			position = hit.position;
+//			float normalLengthXZ = sqrtf(hit.normal.x * hit.normal.z + hit.normal.x * hit.normal.z);
+//			slopeRate = 1.0f - (hit.normal.y / (normalLengthXZ + hit.normal.y));
 //
-//			// 壁までのベクトルを計算
-//			DirectX::XMVECTOR Start = DirectX::XMLoadFloat3(&start);
-//			DirectX::XMVECTOR End = DirectX::XMLoadFloat3(&end);
-//			DirectX::XMVECTOR Vec = DirectX::XMVectorSubtract(End, Start);
-//
-//			// 壁の法線
-//			DirectX::XMVECTOR Normal = DirectX::XMLoadFloat3(&hit.normal);
-//
-//			// キャラクターの半径を考慮した押し出し処理
-//			float penetrationDepth = radius - hit.distance; // 半径 - 壁までの距離
-//			if (penetrationDepth > 0.0f) {
-//				DirectX::XMVECTOR PushOut = DirectX::XMVectorScale(Normal, penetrationDepth);
-//				Start = DirectX::XMVectorAdd(Start, PushOut); // キャラクターを壁の外側に押し出す
+//			if (!isGround)
+//			{
+//				OnLanding();
 //			}
+//			isGround = true;
+//			velocity.y = 0.0f;
 //
-//			// 壁に沿った移動処理
-//			DirectX::XMVECTOR Dot = DirectX::XMVector3Dot(Vec, Normal);
-//			DirectX::XMVECTOR SlideVec = DirectX::XMVectorSubtract(Vec, DirectX::XMVectorMultiply(Normal, Dot));
-//			DirectX::XMVECTOR FinalPosition = DirectX::XMVectorAdd(Start, SlideVec);
+//			angle.y += hit.rotation.y;
 //
-//			// 結果を適用
-//			position.x = FinalPosition.m128_f32[0];
-//			position.y = FinalPosition.m128_f32[1];
-//			position.z = FinalPosition.m128_f32[2];
 //
-//			// 壁に衝突しているフラグを設定
-//			wallHit = true;
+//
 //		}
 //		else {
-//			// 壁に衝突しない場合はそのまま移動
-//			position.x += mx;
-//			position.z += mz;
-//
-//			wallHit = false;
+//			position.y += my;
+//			isGround = false;
 //		}
+//
+//
 //	}
+//	else if (my > 0.0f) {
+//		position.y += my;
+//		isGround = false;
+//	}
+//
+//	//地面の向きに沿うようにXZ軸回転
+//	{
+//		//Y軸が法線ベクトルに向くオイラー角回転を算出する
+//		float ax = atan2f(normal.z, normal.y);
+//		float az = -atan2f(normal.x, normal.y);
+//
+//		//線形補完で滑らかに回転する
+//		angle.x = Mathf::Lerp(angle.x, ax, 0.2f);
+//		angle.z = Mathf::Lerp(angle.z, az, 0.2f);
+//	}
+//
+//
 //}
 
-void Character::UpdateHorizontalMove(float elapsedTime) {
 
-	//水平速力量計算
+
+
+
+void Character::UpdateHorizontalMove(float elapsedTime) {
+	// 水平速力量計算
 	float velocityLengthXZ = sqrtf(velocity.x * velocity.x + velocity.z * velocity.z);
 	if (velocityLengthXZ > 0.0f) {
-		float mx = velocity.x * elapsedTime;
-		float mz = velocity.z * elapsedTime;
+		float mx = velocity.x * speed * elapsedTime;
+		float mz = velocity.z * speed * elapsedTime;
 
-		//レイの開始位置と終点位置
+		// キャラクターの中心からの移動先
 		DirectX::XMFLOAT3 start = { position.x, position.y + stepOffset, position.z };
-		DirectX::XMFLOAT3 end = { position.x + mx,position.y + stepOffset,position.z + mz };
+		DirectX::XMFLOAT3 end = { position.x + mx, position.y + stepOffset, position.z + mz };
 
-		//レイキャストによる壁判定
+		// 壁判定
 		HitResult hit;
-		if (StageManager::Instance().RayCast(start, end, hit))
-		{
-			//壁までのベクトル
+		if (StageManager::Instance().RayCast(start, end, hit)) {
+			// レイが壁に当たった場合
+
+			// 壁までのベクトルを計算
 			DirectX::XMVECTOR Start = DirectX::XMLoadFloat3(&start);
 			DirectX::XMVECTOR End = DirectX::XMLoadFloat3(&end);
 			DirectX::XMVECTOR Vec = DirectX::XMVectorSubtract(End, Start);
 
-			//壁の法線
+			// 壁の法線
 			DirectX::XMVECTOR Normal = DirectX::XMLoadFloat3(&hit.normal);
 
-			//入射ベクトルを法線に射影
-			DirectX::XMVECTOR Dot = DirectX::XMVector3Dot(DirectX::XMVectorNegate(Vec), Normal);
-
-			//補正位置の計算
-
-			DirectX::XMVECTOR CollectPosition = DirectX::XMVectorMultiplyAdd(Normal, Dot, End);
-			DirectX::XMFLOAT3 collectPosition;
-			DirectX::XMStoreFloat3(&collectPosition, CollectPosition);
-
-			//
-			HitResult hit2;
-			if (!StageManager::Instance().RayCast(start, collectPosition, hit2)) {
-				position.x = collectPosition.x;
-				position.z = collectPosition.z;
-			}
-			else {
-				position.x = hit2.position.x;
-				position.z = hit2.position.z;
+			// キャラクターの半径を考慮した押し出し処理
+			float penetrationDepth = radius - hit.distance; // 半径 - 壁までの距離
+			if (penetrationDepth > 0.0f) {
+				DirectX::XMVECTOR PushOut = DirectX::XMVectorScale(Normal, penetrationDepth);
+				Start = DirectX::XMVectorAdd(Start, PushOut); // キャラクターを壁の外側に押し出す
 			}
 
+			// 壁に沿った移動処理
+			DirectX::XMVECTOR Dot = DirectX::XMVector3Dot(Vec, Normal);
+			DirectX::XMVECTOR SlideVec = DirectX::XMVectorSubtract(Vec, DirectX::XMVectorMultiply(Normal, Dot));
+			DirectX::XMVECTOR FinalPosition = DirectX::XMVectorAdd(Start, SlideVec);
 
+			// 結果を適用
+			position.x = FinalPosition.m128_f32[0];
+			position.y = FinalPosition.m128_f32[1];
+			position.z = FinalPosition.m128_f32[2];
 
-
-
+			// 壁に衝突しているフラグを設定
+			wallHit = true;
 		}
-		else
-		{
-			//移動
+		else {
+			// 壁に衝突しない場合はそのまま移動
 			position.x += mx;
 			position.z += mz;
+
+			wallHit = false;
 		}
-
 	}
-
-
 }
+//
+//void Character::UpdateHorizontalMove(float elapsedTime) {
+//
+//	//水平速力量計算
+//	float velocityLengthXZ = sqrtf(velocity.x * velocity.x + velocity.z * velocity.z);
+//	if (velocityLengthXZ > 0.0f) {
+//		float mx = velocity.x * elapsedTime;
+//		float mz = velocity.z * elapsedTime;
+//
+//		//レイの開始位置と終点位置
+//		DirectX::XMFLOAT3 start = { position.x, position.y + stepOffset, position.z };
+//		DirectX::XMFLOAT3 end = { position.x + mx,position.y + stepOffset,position.z + mz };
+//
+//		//レイキャストによる壁判定
+//		HitResult hit;
+//		if (StageManager::Instance().RayCast(start, end, hit))
+//		{
+//			//壁までのベクトル
+//			DirectX::XMVECTOR Start = DirectX::XMLoadFloat3(&start);
+//			DirectX::XMVECTOR End = DirectX::XMLoadFloat3(&end);
+//			DirectX::XMVECTOR Vec = DirectX::XMVectorSubtract(End, Start);
+//
+//			//壁の法線
+//			DirectX::XMVECTOR Normal = DirectX::XMLoadFloat3(&hit.normal);
+//
+//			//入射ベクトルを法線に射影
+//			DirectX::XMVECTOR Dot = DirectX::XMVector3Dot(DirectX::XMVectorNegate(Vec), Normal);
+//
+//			//補正位置の計算
+//
+//			DirectX::XMVECTOR CollectPosition = DirectX::XMVectorMultiplyAdd(Normal, Dot, End);
+//			DirectX::XMFLOAT3 collectPosition;
+//			DirectX::XMStoreFloat3(&collectPosition, CollectPosition);
+//
+//			//
+//			HitResult hit2;
+//			if (!StageManager::Instance().RayCast(start, collectPosition, hit2)) {
+//				position.x = collectPosition.x;
+//				position.z = collectPosition.z;
+//			}
+//			else {
+//				position.x = hit2.position.x;
+//				position.z = hit2.position.z;
+//			}
+//
+//
+//
+//
+//
+//		}
+//		else
+//		{
+//			//移動
+//			position.x += mx;
+//			position.z += mz;
+//		}
+//
+//	}
+//
+//
+//}
 
 //元の位置に戻る処理
 void Character::ResetPosition() {

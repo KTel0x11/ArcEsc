@@ -43,6 +43,7 @@ void UIFrame::Update(float elapsedTime) {
 		GameUpdate(elapsedTime);
 	}
 	else {
+		GearColor = { 1,1,1,1 };
 		ToggleSpeed = 50.0f;
 		GearAng += ToggleSpeed * elapsedTime;
 		if (GearAng > 360.0f) {
@@ -213,4 +214,16 @@ void UIFrame::DamageAnimation(float elapsedTime) {
 
 	}
 
+}
+
+//フレームのフェードイン
+bool UIFrame::FadeIn(float Time, float elapsedTime) {
+	if (GearColor.w < 1.0f) {
+		GearColor.w += elapsedTime / Time;
+		if (GearColor.w > 1.0f) {
+			GearColor.w = 1.0f;
+			return true;
+		}
+	}
+	return false;
 }

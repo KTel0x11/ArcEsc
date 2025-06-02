@@ -208,22 +208,23 @@ const int Axis_MAX = 5;
 
 	 //作成スプライト関係
 	 Sprite* spriteMake = nullptr;
-	 DirectX::XMFLOAT2 spriteMakePos = { 1800,50 };
-	 DirectX::XMFLOAT2 spriteMakeSize = { 200,100 };
-	 DirectX::XMFLOAT4 MakeColor = { 1,1,1,1 };
+	 DirectX::XMFLOAT2 spriteMakePos = { 50,50 };
+	 DirectX::XMFLOAT2 spriteMakeSize = { 100,20 };
+	 DirectX::XMFLOAT4 MakeColor = { 1,1,1,0 };
+
 
 	
 
 	 //ショップスプライト関係
 	 Sprite* spriteShop = nullptr;
 	 DirectX::XMFLOAT2 spriteShopPos = { 1900, 200 };
-	 DirectX::XMFLOAT2 spriteShopSize = { 200,100 };
+	 DirectX::XMFLOAT2 spriteShopSize = { 100,20 };
 	 DirectX::XMFLOAT4 ShopColor = { 1,1,1,1 };
 
 
 	 //戻るスプライト関係
 	 Sprite* spriteBack = nullptr;
-	 DirectX::XMFLOAT2 spriteBackPos = { 1000, 500 };
+	 DirectX::XMFLOAT2 spriteBackPos = { 970, 530 };
 	 DirectX::XMFLOAT2 spriteBackSize = { 150,75 };
 	 DirectX::XMFLOAT4 BackColor = { 1,1,1,1 };
 
@@ -232,15 +233,16 @@ const int Axis_MAX = 5;
 	 Sprite* spriteFrame = nullptr;
 	 DirectX::XMFLOAT2 spriteFramePos = { 347, 87 };
 	 DirectX::XMFLOAT2 spriteFrameSize = { 106,106 };
+
 	 //設計図の木枠スプライト関係
 	 Sprite* spriteSekkei = nullptr;
-	 DirectX::XMFLOAT2 spriteSekkeiPos = { 60, 75 };
-	 DirectX::XMFLOAT2 spriteSekkeiSize = { 235,439 };
+	 DirectX::XMFLOAT2 spriteSekkeiPos = { 970, 30 };
+	 DirectX::XMFLOAT2 spriteSekkeiSize = { 200,350 };
 
 	 //操作説明スプライト関係
 	 Sprite* spriteExpCon = nullptr; //コントローラー
 	 Sprite* spriteExpKey = nullptr;//キーボード
-	 DirectX::XMFLOAT2 spriteExpPos = { 950, 50 };
+	 DirectX::XMFLOAT2 spriteExpPos = { 50, 250 };
 	 DirectX::XMFLOAT2 spriteExpSize = { 150,100 };
 
 	 //ショップスプライト関係
@@ -260,12 +262,12 @@ const int Axis_MAX = 5;
 	 float payTimer = 0;
 	 //破壊ボタンスプライト関係
 	 Sprite* spriteDelete = nullptr;
-	 DirectX::XMFLOAT2 spriteDeletePos = { 975, 350 };
-	 DirectX::XMFLOAT2 spriteDeleteSize = { 200,95 };
+	 DirectX::XMFLOAT2 spriteDeletePos = { 970,390 };
+	 DirectX::XMFLOAT2 spriteDeleteSize = { 150,75 };
 	 DirectX::XMFLOAT4 DeleteColor = { 1,1,1,1 };
 	 //コイン枠スプライト関係
 	 Sprite* spriteCoinF = nullptr;
-	 DirectX::XMFLOAT2 spriteCoinFPos = { 965, 150 };
+	 DirectX::XMFLOAT2 spriteCoinFPos = { 965, 200 };
 	 DirectX::XMFLOAT2 spriteCoinFSize = { 295,160 };
 	 DirectX::XMFLOAT4 CoinFColor = { 1,1,1,1 };
 
@@ -327,10 +329,11 @@ const int Axis_MAX = 5;
 
 	 int point = 0;
 
+
 	 Room::SpriteInfo bulePrint{
-	 {140.0f, 140.0f },
-	 {70.0f,70.0f},
-	 92.5f
+	 {1035.0f, 88.0f },
+	 {60.0f,60.0f},
+	  74.0f
 	 };
 
  };

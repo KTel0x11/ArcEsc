@@ -35,6 +35,8 @@ public:
 	//ダメージアニメーション
 	void DamageAnimation(float elapsedTime);
 
+	bool FadeIn(float Time, float elapsedTime);
+
 	int animeState = -1;
 
 private:

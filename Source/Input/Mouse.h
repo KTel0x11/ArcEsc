@@ -46,6 +46,11 @@ public:
 	// 前回のマウスカーソルY座標取得
 	int GetOldPositionY() const { return positionY[1]; }
 
+	//移動量
+	int GetDeltaX() const { return positionX[0] - positionX[1]; }
+	int GetDeltaY() const { return positionY[0] - positionY[1]; }
+
+
 	// スクリーン幅設定
 	void SetScreenWidth(int width) { screenWidth = width; }
 
@@ -57,6 +62,8 @@ public:
 
 	// スクリーン高さ取得
 	int GetScreenHeight() const { return screenHeight; }
+
+
 
 private:
 	MouseButton		buttonState[2] = { 0 };

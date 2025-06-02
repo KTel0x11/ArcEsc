@@ -89,6 +89,7 @@ private:
 	
 	AudioSource* BGM = nullptr;
 
+	float changeTime = 0.0f;
 	float TitleChangeTimer = 0;
 	int animeState = 0;
 

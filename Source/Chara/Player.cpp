@@ -67,7 +67,7 @@ Player::Player()
 	health = maxHealth;
 	oldHealth = maxHealth;
 	friction = 0.7f;
-	gravity = -1.6f;
+	gravity = -2.0f;
 	angle = { 0.0f,0.0f,0.0f };
 	isDead = false;
 	coin = 10;
@@ -634,7 +634,7 @@ bool Player::InputAttack()
 	if (GameState::Instance().GetControllerState() == GameState::ControllerState::Controller)
 	{
 		GamePad& gamePad = Input::Instance().GetGamePad();
-		if (gamePad.GetButtonDown() & GamePad::BTN_X) {
+		if (gamePad.GetButtonDown() & GamePad::BTN_B) {
 			return true;
 		}
 	}
@@ -673,32 +673,18 @@ bool Player::InputJump() {
 
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
-	if (GameState::Instance().GetControllerState() == GameState::ControllerState::Controller)
-	{
-		if (gamePad.GetButtonDown() & GamePad::BTN_B) {
-			//ジャンプ回数制限
-			if (jumpCount < jumpLimit) {
-				//ジャンプ
-				jumpCount++;
-				Jump(jumpSpeed);
-				//ジャンプ入力した
-				return true;
-			}
+	if (gamePad.GetButtonDown() & GamePad::BTN_A) {
+		//ジャンプ回数制限
+		if (jumpCount < jumpLimit) {
+			//ジャンプ
+			jumpCount++;
+			Jump(jumpSpeed);
+			//ジャンプ入力した
+			return true;
 		}
 	}
-	else if (GameState::Instance().GetControllerState() == GameState::ControllerState::MouseAndKeyboard)
-	{
-		if (GetAsyncKeyState(VK_SPACE) & 1) {
-			//ジャンプ回数制限
-			if (jumpCount < jumpLimit) {
-				//ジャンプ
-				jumpCount++;
-				Jump(jumpSpeed);
-				//ジャンプ入力した
-				return true;
-			}
-		}
-	}
+	
+
 
 	return false;
 }
@@ -727,7 +713,7 @@ void Player::InputProjectile()
 
 
 
-	//}
+	//
 
 
 	////追尾弾丸発射
@@ -1230,25 +1216,21 @@ void Player::TransitionIdleState() {
 void Player::UpdateIdleState(float elapsedTime) {
 	//移動入力処理
 
-	if (InputMove(elapsedTime)) {
+	if ((GameState::Instance().GetState() != GameState::Start)&&InputMove(elapsedTime)) {
 		TransitionMoveWalkState();
 	}
 
 	//ジャンプ入力処理
-	if (InputJump()) {
+	if ((GameState::Instance().GetState() != GameState::Start)&&InputJump()) {
 		TransitionJumpState();
 	}
 
-	//ガード入力処理
-	if (InputGuard()) {
-		TransitionGuardState();
-	}
 
 	//弾丸入力処理
 	InputProjectile();
 
 	//攻撃入力処理
-	if (InputAttack()) {
+	if ((GameState::Instance().GetState() != GameState::Start)&&InputAttack()) {
 		TransitionAttackState();
 	}
 	//回避入力処理

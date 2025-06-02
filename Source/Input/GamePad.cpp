@@ -2,6 +2,8 @@
 #include <math.h>
 #include <Xinput.h>
 #include "Input/GamePad.h"
+#include "Input/Input.h"
+#include"Input/Mouse.h"
 
 // 更新
 void GamePad::Update()
@@ -129,8 +131,9 @@ void GamePad::Update()
 #endif
 	}
 
-	// キーボードでエミュレーション
+	// キーボード＆マウスでエミュレーション
 	{
+		Mouse& mouse = Input::Instance().GetMouse();
 		float lx = 0.0f;
 		float ly = 0.0f;
 		float rx = 0.0f;
@@ -143,10 +146,17 @@ void GamePad::Update()
 		if (GetAsyncKeyState('J') & 0x8000) rx = -1.0f;
 		if (GetAsyncKeyState('K') & 0x8000) ry = -1.0f;
 		if (GetAsyncKeyState('L') & 0x8000) rx = 1.0f;
-		if (GetAsyncKeyState('Z') & 0x8000) newButtonState |= BTN_A;
-		if (GetAsyncKeyState('X') & 0x8000) newButtonState |= BTN_B;
+		if (GetAsyncKeyState('Q') & 0x8000) newButtonState |= BTN_LEFT_SHOULDER;	// Q
+		if (GetAsyncKeyState('E') & 0x8000) newButtonState |= BTN_RIGHT_SHOULDER;	// E
+		//if (GetAsyncKeyState('Z') & 0x8000) newButtonState |= BTN_A;
+		//if (GetAsyncKeyState('X') & 0x8000) newButtonState |= BTN_B;
+		if (mouse.GetButtonDown() & Mouse::BTN_LEFT) newButtonState |= BTN_B;	// 左クリック
+		if (mouse.GetButtonDown() & Mouse::BTN_RIGHT) newButtonState |= BTN_Y;	// 右クリック
+		
 		if (GetAsyncKeyState('C') & 0x8000) newButtonState |= BTN_X;
-		if (GetAsyncKeyState('V') & 0x8000) newButtonState |= BTN_Y;
+		//if (GetAsyncKeyState('V') & 0x8000) newButtonState |= BTN_Y;
+
+		if (GetAsyncKeyState(VK_SPACE) & 0x8000) newButtonState |= BTN_A;
 		if (GetAsyncKeyState(VK_UP) & 0x8000)	newButtonState |= BTN_UP;
 		if (GetAsyncKeyState(VK_RIGHT) & 0x8000)	newButtonState |= BTN_RIGHT;
 		if (GetAsyncKeyState(VK_DOWN) & 0x8000)	newButtonState |= BTN_DOWN;

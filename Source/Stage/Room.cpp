@@ -62,7 +62,7 @@ void Room::BulePrintRender(ID3D11DeviceContext* dc,int Y_axis) {
 void Room::SelectRender(ID3D11DeviceContext* dc, DirectX::XMFLOAT3 Pos) {
 
 	spriteRoom->Render(dc,
-		Pos.x - bulePrint.spriteSize.x / 2,Pos.y - bulePrint.spriteSize.y / 2,bulePrint.spriteSize.x, bulePrint.spriteSize.y,
+		Pos.x - bulePrint.spriteSize.x,Pos.y - bulePrint.spriteSize.y ,bulePrint.spriteSize.x * 1.5f, bulePrint.spriteSize.y * 1.5f,
 		128 * static_cast<int>(roomType), 0, 128, 128,
 		90 * angleType,
 		color.x, color.y, color.z, color.w);

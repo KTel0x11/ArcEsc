@@ -195,7 +195,28 @@ void SceneGame::Update(float elapsedTime)
 	{
 	case GameState::State::Start: 
 	{
-		GameState::Instance().SetState(GameState::State::Game);
+		//ステージ更新
+		StageManager::Instance().Update(elapsedTime);
+
+		//ギミック更新
+		GimmickManager::Instance().Update(elapsedTime);
+		//エネミー更新
+		EnemyManager::Instance().Update(elapsedTime);
+		//エフェクト更新
+		EffectManager::Instance().Update(elapsedTime);
+		//ゲーム画面のフレーム更新
+		UIFrame::Instance().Update(elapsedTime);
+
+		//カメラ更新
+		cameraController->Update(elapsedTime);
+
+		
+		changeTime += elapsedTime;
+		if (changeTime >= 1.0f) {	//1秒後にゲーム開始
+			GameState::Instance().SetState(GameState::State::Game);
+			changeTime = 0.0f;
+		}
+		
 		break;
 	}
 	/******************************************ゲーム進行中***************************************/
@@ -440,6 +461,67 @@ void SceneGame::Render()
 	switch (GameState::Instance().GetState())
 	{
 
+		/***********************************スタート画面***********************************/
+	case GameState::State::Start:
+	{
+		// 3Dモデル描画
+		{
+			//プレイヤー描画
+			player->Render(dc, shader);
+
+			//ステージ描画
+			StageManager::Instance().Render(dc, shader);
+
+
+			//ギミック描画
+			GimmickManager::Instance().Render(dc, shader);
+
+
+
+			//エネミー描画
+			EnemyManager::Instance().Render(dc, shader);
+
+			//エフェクト描画
+			EffectManager::Instance().Render(rc.view, rc.projection);
+
+
+
+		}
+		shader->End(dc);
+
+
+		// 2Dスプライト描画
+		{
+			//プレイヤーUI関連
+			player->UIRender(dc);
+
+			//ゲームUIフレーム描画
+			UIFrame::Instance().Render(graphics, dc);
+
+			//ポーズのボタンガイド
+			if (GameState::Instance().GetControllerState() == GameState::ControllerState::Controller) {
+				float PauseTexWidth = static_cast<float>(spritePauseButtonPad->GetTextureWidth());
+				float PauseTexHeight = static_cast<float>(spritePauseButtonPad->GetTextureHeight());
+				spritePauseButtonPad->Render(dc, 64, 660, 512, 32, 0, 0, PauseTexWidth, PauseTexHeight, 0, 1, 1, 1, 1);
+			}
+			else
+			{
+				float PauseTexWidth = static_cast<float>(spritePauseButtonKM->GetTextureWidth());
+				float PauseTexHeight = static_cast<float>(spritePauseButtonKM->GetTextureHeight());
+				spritePauseButtonKM->Render(dc, 64, 660, 512, 32, 0, 0, PauseTexWidth, PauseTexHeight, 0, 1, 1, 1, 1);
+			}
+
+			//Enemy_HP_UI関連
+#if 0
+			{
+				RenderEnemyGauge(dc, rc.view, rc.projection);
+			}
+#endif
+		}
+
+
+		break;
+	}
 	/***********************************ゲーム中の描画*************************/
 	case GameState::State::Game:			
 	{

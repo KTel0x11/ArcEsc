@@ -586,7 +586,7 @@ void CreateMap::MakeRoom(){
 	StageManager& stageManager = StageManager::Instance();
 	GamePad& gamepad = Input::Instance().GetGamePad();
 
-	spriteMakePos = { 70,550 };
+	
 
 	//部屋のスプライトのサイズ
 
@@ -662,9 +662,11 @@ void CreateMap::MakeRender(ID3D11DeviceContext* dc) {
 
 
 	//作るボタンを描画
-	float makeTexHeight = static_cast<float>(spriteMake->GetTextureHeight());
-	float makeTexWidth = static_cast<float>(spriteMake->GetTextureWidth());
-	spriteMake->Render(dc, spriteMakePos.x, spriteMakePos.y, spriteMakeSize.x, spriteMakeSize.y, 0, 0, makeTexWidth, makeTexHeight, 0, MakeColor.x, MakeColor.y, MakeColor.z, MakeColor.w);
+	//float makeTexHeight = static_cast<float>(spriteMake->GetTextureHeight());
+	//float makeTexWidth = static_cast<float>(spriteMake->GetTextureWidth());
+	//spriteMake->Render(dc, spriteMakePos.x, spriteMakePos.y, spriteMakeSize.x, spriteMakeSize.y, 0, 0, makeTexWidth, makeTexHeight, 0, MakeColor.x, MakeColor.y, MakeColor.z, MakeColor.w);
+
+	MessageWindow::Instance().MessageRender(dc, spriteMake, spriteMakePos, spriteMakeSize, MakeColor);
 
 	////ゴミ箱ボタンを描画
 	float deleteTexHeight = static_cast<float>(spriteDelete->GetTextureHeight());
@@ -698,7 +700,7 @@ void CreateMap::MakeRender(ID3D11DeviceContext* dc) {
 		MessageWindow::Instance().MessageRender(dc, spriteExpKey, spriteExpPos, spriteExpSize, { 0.0f, 0.0f, 1.0f, 0.5f });
 	}
 
-	
+
 	//選択しているマスのフレームを描画
 	if (PointUI::Instance().ClickButton(spriteBlockPos.x , spriteBlockPos.y,(spriteBlockSize.x + spriteBlockInterval) * Axis_MAX ,(spriteBlockSize.y + spriteBlockInterval) * Axis_MAX))
 	{
@@ -719,6 +721,8 @@ void CreateMap::MakeRender(ID3D11DeviceContext* dc) {
 	if (selectRoom->roomType != Room::EMPTY) {
 		selectRoom->SelectRender(dc, PointUI::Instance().GetPoint());
 	}
+
+
 }
 
 
@@ -728,7 +732,14 @@ bool CreateMap::SelectBluePrint() {
 	//設計図内の処理
 	for (int i = 0; i < 4; i++)
 	{
-	
+		if (PointUI::Instance().ClickButton(bulePrint.spritePos.x, bulePrint.spritePos.y + bulePrint.blockInterval * i, bulePrint.spriteSize.x, bulePrint.spriteSize.y))
+		{
+			haveRoom[i]->color = { 1.5f,1.5f,1.5f,1.0f };//触れている部屋の色を変える
+		}
+		else {
+			//選択されている部屋の色を戻す
+			haveRoom[i]->color = { 1,1,1,1 };
+		}
 
 		if (UIButton::Instance().ButtonDown({ bulePrint.spritePos.x, bulePrint.spritePos.y + bulePrint.blockInterval * i }, bulePrint.spriteSize) && !selectFlag) {
 			if (selectRoom->roomType == Room::EMPTY && haveRoom[i]->roomType != Room::EMPTY) //もし何も選択されていなければ
@@ -742,8 +753,10 @@ bool CreateMap::SelectBluePrint() {
 				return true;
 			}
 		
+		
 
 		}
+
 
 
 	}
@@ -943,6 +956,8 @@ void CreateMap::ShopRender(ID3D11DeviceContext* dc) {
 	float payTexWidth = static_cast<float>(spritePay->GetTextureWidth());
 
 
+
+
 	//スプライトの描画
 	for (int i = 0; i < 3; i++) {
 		spriteItemShop->Render(dc,
@@ -963,15 +978,17 @@ void CreateMap::ShopRender(ID3D11DeviceContext* dc) {
 
 	}
 
-	//壊すボタンを描画
+	//ショップ
 	float breakTexHeight = static_cast<float>(spriteShop->GetTextureHeight());
 	float breakTexWidth = static_cast<float>(spriteShop->GetTextureWidth());
-	spriteShop->Render(dc, spriteShopPos.x, spriteShopPos.y, spriteShopSize.x, spriteShopSize.y, 0, 0, breakTexWidth, breakTexHeight, 0, 1, 1, 1, 1);
+	//spriteShop->Render(dc, spriteShopPos.x, spriteShopPos.y, spriteShopSize.x, spriteShopSize.y, 0, 0, breakTexWidth, breakTexHeight, 0, 1, 1, 1, 1);
+	MessageWindow::Instance().MessageRender(dc, spriteShop, spriteShopPos, spriteShopSize, { 1.0f,1.0f,1.0f,0.0f });
+
 
 	float coinFTexHeight = static_cast<float>(spriteCoinF->GetTextureHeight());
 	float coinFTexWidth = static_cast<float>(spriteCoinF->GetTextureWidth());
 	spriteCoinF->Render(dc, spriteCoinFPos.x, spriteCoinFPos.y, spriteCoinFSize.x, spriteCoinFSize.y, 0, 0, coinFTexWidth, coinFTexHeight, 0, 1, 1, 1, 1);
-	NumFont::Instance().NumRender(dc, Player::Instance().coin, { 1170, 195 }, {70, 70}, 0, {1,1,0,1});
+	NumFont::Instance().NumRender(dc, Player::Instance().coin, { 1170, 245 }, {70, 70}, 0, {1,1,0,1});
 
 	//戻るボタンを描画
 	float backTexHeight = static_cast<float>(spriteBack->GetTextureHeight());
